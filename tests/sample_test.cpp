@@ -9,19 +9,15 @@ class DBTest : public ::testing::Test{
 protected:
     std::vector<int> db1;
 
-
-
-
-    void SetUp() override
-    {
+    void SetUp() override{
         db1.push_back(2);
         db1.push_back(5);
     }
 };
 
 
-TEST_F(DBTest, IsEmptyInitially) {
-EXPECT_EQ(db1.size(), 0);
+TEST_F(DBTest, CheckAfterSize) {
+EXPECT_EQ(db1.size(), 2);
 }
 
 
