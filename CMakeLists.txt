@@ -3,8 +3,8 @@ project(leodb)
 set(CMAKE_CXX_STANDARD 14)
 
 set(leodb_lib
-        src/leodb/main.cpp
-        )
+        src/leodb/main.cpp)
+
 add_library(${PROJECT_NAME} ${leodb_lib})
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/src)
 
@@ -29,5 +29,5 @@ add_subdirectory("${CMAKE_BINARY_DIR}/external/googletest-src"
         "${CMAKE_BINARY_DIR}/external/googletest-build"
         )
 
-# add_subdirectory(examples)
+add_subdirectory(misc)
 add_subdirectory(tests)
