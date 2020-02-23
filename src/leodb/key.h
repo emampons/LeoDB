@@ -24,7 +24,7 @@ public:
         return item < other.item;
     }
     friend std::ostream& operator<<(std::ostream& os,  const Key& key){
-        os << key.item << "\0";
+        os << key.item << " \0";
         return os;
     }
     int hashItem() const{return item;};
