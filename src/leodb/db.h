@@ -4,25 +4,14 @@
 #include <unordered_map>
 #include "key.h"
 #include "value.h"
+#include "entry.h"
 
-template <class T>
-struct hashFunction {
-    // Use sum of lengths of first and last names
-    // as hash function.
-    size_t operator()(const Key<T>& key) const
-    {
-        return key.hashItem();
-    }
-};
-
+template <class T, class U>
 class DB {
 public:
     DB() = default;;
-    template<class T>
     bool put(Key<T> key, Value<T> value);
-    template<class T>
     bool del(Key<T> key);
-    template<class T>
     Value<T> get(Key<T> key);
  //   template<class T>
 //    std::vector<Value<T>> scan(Key<T> low, Key<T> high);
@@ -31,20 +20,9 @@ public:
 //    float avg();
 //    float stddev();
 private:
-
-    std::unordered_map<Key, Value, hashFunction> table;
+    std::unordered_map<int, Entry<T, U>> table;
     int totalKeys;
     // maybe some more stuff...
 };
-
-//template <class T>
-//struct hashFunction {
-//    // Use sum of lengths of first and last names
-//    // as hash function.
-//    size_t operator()(const Key<T>& key) const
-//    {
-//        return key.hashItem();
-//    }
-//};
 
 #endif //LEODB_DB_H
