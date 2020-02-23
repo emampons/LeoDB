@@ -8,7 +8,8 @@
 template <class T, class U>
 class Entry {
 public:
-    Entry(Key<T> key, Value<U> value) {key=key; value=value}
+    Entry(Key<T> key, Value<U> value);
+    Value<U> getValue();
 private:
     Key<T> key;
     Value<U> value;

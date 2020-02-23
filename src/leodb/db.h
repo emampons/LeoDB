@@ -10,7 +10,7 @@ template <class T, class U>
 class DB {
 public:
     DB() = default;;
-    bool put(Key<T> key, Value<T> value);
+    bool put(Key<T> key, Value<U> value);
     bool del(Key<T> key);
     Value<T> get(Key<T> key);
  //   template<class T>
