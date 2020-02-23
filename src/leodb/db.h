@@ -20,7 +20,7 @@ public:
 //    float avg();
 //    float stddev();
 private:
-    std::unordered_map<int, Entry<T, U>> table;
+    std::unordered_map<int, Entry<T, U> > table;
     int totalKeys;
     // maybe some more stuff...
 };

@@ -8,6 +8,7 @@
 template <class T, class U>
 class Entry {
 public:
+    Entry()= default;
     Entry(Key<T> key, Value<U> value);
     Value<U> getValue();
 private:

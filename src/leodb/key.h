@@ -7,6 +7,9 @@
 template<class T>
 class Key{
 public:
+    Key(){
+        item = 1;
+    }
     explicit Key(T _item){item = _item;}
     ~Key()= default;
     bool operator == (Key other){

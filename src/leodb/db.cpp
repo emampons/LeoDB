@@ -25,8 +25,7 @@ bool DB<T, U>::del(Key<T> key) {
      * Return: True/False if it was successful
      */
     try {
-        table.erase(key.hashItem());
-        return true;
+        return table.erase(key.hashItem());
     } catch (int e) {
         return false;
     }

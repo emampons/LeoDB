@@ -8,9 +8,15 @@
 template <typename T>
 class Value {
 public:
-    Value();
-    Value(std::vector<T> _items){items = _items;}
-    ~Value();
+    Value()= default;
+
+    explicit Value(T item){
+        items.push_back(item);
+    }
+    explicit Value(std::vector<T> _items){
+        items = _items;
+    }
+    ~Value()= default;
      bool operator == (Value other) const {
          return other.items == items;
      }

@@ -1,0 +1,941 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated>
+      <config projectName="leodb" targetName="leodb" />
+      <config projectName="leodb" targetName="gmock" />
+      <config projectName="leodb" targetName="sample_test" />
+      <config projectName="leodb" targetName="gtest" />
+      <config projectName="leodb" targetName="simple_benchmark" />
+      <config projectName="leodb" targetName="gtest_main" />
+      <config projectName="leodb" targetName="gmock_main" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="dc6ecc07-f629-4810-ab88-f86b7f6272f5" name="Default Changelist" comment="misc components added">
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/untitledDB.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.3/CMakeCCompiler.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.3/CMakeCXXCompiler.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.3/CMakeDetermineCompilerABI_C.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.3/CMakeDetermineCompilerABI_CXX.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.3/CMakeSystem.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdC/CMakeCCompilerId.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdC/a.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdCXX/CMakeCXXCompilerId.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdCXX/a.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-environment.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cmake.check_cache" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/feature_tests.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/feature_tests.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/feature_tests.cxx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/cmake_install.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-build/googletest/generated/GTestConfig.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-build/googletest/generated/GTestConfigVersion.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-build/googletest/generated/gmock.pc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-build/googletest/generated/gmock_main.pc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-build/googletest/generated/gtest.pc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-build/googletest/generated/gtest_main.pc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/CMakeCache.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/CMakeFiles/3.14.3/CMakeSystem.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/CMakeFiles/CMakeDirectoryInformation.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/CMakeFiles/CMakeOutput.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/CMakeFiles/CMakeRuleHashes.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/CMakeFiles/Makefile.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/CMakeFiles/Makefile2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/CMakeFiles/cmake.check_cache" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/CMakeFiles/googletest-complete" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/CMakeFiles/googletest.dir/DependInfo.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/CMakeFiles/googletest.dir/Labels.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/CMakeFiles/googletest.dir/Labels.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/CMakeFiles/googletest.dir/build.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/CMakeFiles/googletest.dir/cmake_clean.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/CMakeFiles/googletest.dir/depend.internal" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/CMakeFiles/googletest.dir/depend.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/CMakeFiles/googletest.dir/progress.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/CMakeFiles/progress.marks" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/CMakeLists.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/Makefile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/cmake_install.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/googletest-prefix/src/googletest-stamp/googletest-build" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/googletest-prefix/src/googletest-stamp/googletest-configure" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/googletest-prefix/src/googletest-stamp/googletest-done" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/googletest-prefix/src/googletest-stamp/googletest-download" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/googletest-prefix/src/googletest-stamp/googletest-gitclone-lastrun.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/googletest-prefix/src/googletest-stamp/googletest-gitinfo.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/googletest-prefix/src/googletest-stamp/googletest-install" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/googletest-prefix/src/googletest-stamp/googletest-mkdir" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/googletest-prefix/src/googletest-stamp/googletest-patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/googletest-prefix/src/googletest-stamp/googletest-test" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/googletest-prefix/tmp/googletest-cfgcmd.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/googletest-prefix/tmp/googletest-cfgcmd.txt.in" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/googletest-prefix/tmp/googletest-gitclone.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/external/googletest-download/googletest-prefix/tmp/googletest-gitupdate.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/leodb/db.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/leodb/db.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/leodb/entry.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/leodb/entry.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/leodb/key.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/leodb/key.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/leodb/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/leodb/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/leodb/value.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/leodb/value.h" afterDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="FileEditorManager">
+    <splitter split-orientation="horizontal" split-proportion="0.550035">
+      <split-first>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="210">
+                  <caret line="14" column="68" selection-start-line="14" selection-start-column="68" selection-end-line="14" selection-end-column="68" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/leodb/main.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="255">
+                  <caret line="17" column="1" lean-forward="true" selection-start-line="17" selection-start-column="1" selection-end-line="17" selection-end-column="1" />
+                  <folding>
+                    <element signature="e#0#19#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/leodb/entry.h">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="135">
+                  <caret line="10" column="21" lean-forward="true" selection-start-line="10" selection-start-column="4" selection-end-line="10" selection-end-column="21" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/leodb/value.h">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="270">
+                  <caret line="18" column="22" lean-forward="true" selection-start-line="18" selection-start-column="22" selection-end-line="18" selection-end-column="22" />
+                  <folding>
+                    <element signature="e#126#138#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/misc/simple_benchmark.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="255">
+                  <caret line="17" column="16" selection-start-line="17" selection-start-column="16" selection-end-line="17" selection-end-column="16" />
+                  <folding>
+                    <element signature="e#0#19#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/leodb/commands.h">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="225">
+                  <caret line="15" column="12" selection-start-line="15" selection-start-column="12" selection-end-line="15" selection-end-column="12" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/leodb/commands.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="75">
+                  <caret line="5" selection-start-line="5" selection-end-line="5" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/leodb/key.h">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="9">
+                  <caret line="9" column="10" lean-forward="true" selection-start-line="9" selection-start-column="10" selection-end-line="9" selection-end-column="10" />
+                  <folding>
+                    <element signature="e#95#112#0" expanded="true" />
+                    <element signature="e#88#97#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/.gitignore">
+              <provider selected="true" editor-type-id="text-editor" />
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/leodb/db.h">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="345">
+                  <caret line="26" selection-start-line="26" selection-end-line="26" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/leodb/key.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="300">
+                  <caret line="20" column="8" selection-start-line="20" selection-start-column="8" selection-end-line="20" selection-end-column="18" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/leodb/value.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="30">
+                  <caret line="2" selection-start-line="2" selection-end-line="2" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/tests/sample_test.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="210">
+                  <caret line="14" column="25" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
+                  <folding>
+                    <element signature="e#0#19#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/leodb/db.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="309">
+                  <caret line="28" column="20" lean-forward="true" selection-start-line="28" selection-start-column="20" selection-end-line="28" selection-end-column="20" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="CMakeLists.txt" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/external/clipp.h" />
+        <option value="$PROJECT_DIR$/external/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/tests/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/misc/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/misc/simple_benchmark.cpp" />
+        <option value="$PROJECT_DIR$/tools/gen_data.py" />
+        <option value="$PROJECT_DIR$/src/leodb/value.cpp" />
+        <option value="$PROJECT_DIR$/src/leodb/commands.h" />
+        <option value="$PROJECT_DIR$/misc/sample_test.cpp" />
+        <option value="$PROJECT_DIR$/tests/key_test.cpp" />
+        <option value="$PROJECT_DIR$/src/leodb/key.cpp" />
+        <option value="$PROJECT_DIR$/tests/sample_test.cpp" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/src/leodb/DB.h" />
+        <option value="$PROJECT_DIR$/src/leodb/DB.cpp" />
+        <option value="$PROJECT_DIR$/src/leodb/db.cpp" />
+        <option value="$PROJECT_DIR$/src/leodb/db.h" />
+        <option value="$PROJECT_DIR$/src/leodb/key.h" />
+        <option value="$PROJECT_DIR$/src/leodb/value.h" />
+        <option value="$PROJECT_DIR$/src/leodb/entry.h" />
+        <option value="$PROJECT_DIR$/src/leodb/main.cpp" />
+      </list>
+    </option>
+  </component>
+  <component name="OCResolveContextSettings">
+    <option name="configuration" value="0-leodb" />
+  </component>
+  <component name="ProjectFrameBounds" fullScreen="true">
+    <option name="x" value="37" />
+    <option name="y" value="23" />
+    <option name="width" value="1348" />
+    <option name="height" value="922" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="leodb" type="b2602c69:ProjectViewProjectNode" />
+              <item name="leodb" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="leodb" type="b2602c69:ProjectViewProjectNode" />
+              <item name="leodb" type="462c0819:PsiDirectoryNode" />
+              <item name="misc" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="leodb" type="b2602c69:ProjectViewProjectNode" />
+              <item name="leodb" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="leodb" type="b2602c69:ProjectViewProjectNode" />
+              <item name="leodb" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="leodb" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="leodb" type="b2602c69:ProjectViewProjectNode" />
+              <item name="leodb" type="462c0819:PsiDirectoryNode" />
+              <item name="tests" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/tools" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/tools" />
+      <recent name="$PROJECT_DIR$/data" />
+      <recent name="$PROJECT_DIR$/external" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/leodb" />
+      <recent name="$PROJECT_DIR$/src" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Google Test.DBTest.KeyTest">
+    <configuration name="DBTest" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" temporary="true" PASS_PARENT_ENVS_2="true" PROJECT_NAME="leodb" TARGET_NAME="sample_test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="leodb" RUN_TARGET_NAME="sample_test" TEST_CLASS="DBTest" TEST_MODE="SUITE_TEST">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="BeforeTestRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DBTest.KeyTest" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" temporary="true" PASS_PARENT_ENVS_2="true" PROJECT_NAME="leodb" TARGET_NAME="sample_test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="leodb" RUN_TARGET_NAME="sample_test" TEST_CLASS="DBTest" TEST_METHOD="KeyTest" TEST_MODE="SUITE_TEST">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="BeforeTestRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="gmock" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="leodb" TARGET_NAME="gmock" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="gmock_main" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="leodb" TARGET_NAME="gmock_main" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="gtest" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="leodb" TARGET_NAME="gtest" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="gtest_main" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="leodb" TARGET_NAME="gtest_main" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="leodb" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="leodb" TARGET_NAME="leodb" CONFIG_NAME="Debug" RUN_PATH="$PROJECT_DIR$/src/leodb/main.cpp">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="sample_test" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="leodb" TARGET_NAME="sample_test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="leodb" RUN_TARGET_NAME="sample_test">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="simple_benchmark" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="leodb" TARGET_NAME="simple_benchmark" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="leodb" RUN_TARGET_NAME="simple_benchmark">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="gen_data" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="untitledDB" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tools" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tools/gen_data.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="CMake Application.leodb" />
+      <item itemvalue="CMake Application.gmock" />
+      <item itemvalue="CMake Application.gmock_main" />
+      <item itemvalue="CMake Application.gtest" />
+      <item itemvalue="CMake Application.gtest_main" />
+      <item itemvalue="CMake Application.simple_benchmark" />
+      <item itemvalue="CMake Application.sample_test" />
+      <item itemvalue="Google Test.DBTest" />
+      <item itemvalue="Google Test.DBTest.KeyTest" />
+      <item itemvalue="Python.gen_data" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Google Test.DBTest.KeyTest" />
+        <item itemvalue="Google Test.DBTest" />
+        <item itemvalue="Python.gen_data" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="dc6ecc07-f629-4810-ab88-f86b7f6272f5" name="Default Changelist" comment="" />
+      <created>1582152578316</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1582152578316</updated>
+      <workItem from="1582152580006" duration="2538000" />
+      <workItem from="1582167410851" duration="22513000" />
+    </task>
+    <task id="LOCAL-00001" summary="initial commit - getting gtest working">
+      <created>1582205887357</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1582205887357</updated>
+    </task>
+    <task id="LOCAL-00002" summary="misc components added">
+      <created>1582248374004</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1582248374004</updated>
+    </task>
+    <task id="LOCAL-00003" summary="set up">
+      <created>1582311743321</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1582311743321</updated>
+    </task>
+    <task id="LOCAL-00004" summary="working on key generic">
+      <created>1582483261091</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1582483261091</updated>
+    </task>
+    <task id="LOCAL-00005" summary="misc components added">
+      <created>1582488560079</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1582488560079</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
+    <servers />
+  </component>
+  <component name="TestHistory">
+    <history-entry file="DBTest - 2020.02.21 at 12h 19m 06s.xml">
+      <configuration name="DBTest" configurationId="CMakeGoogleTestRunConfigurationType" />
+    </history-entry>
+    <history-entry file="DBTest - 2020.02.21 at 12h 19m 23s.xml">
+      <configuration name="DBTest" configurationId="CMakeGoogleTestRunConfigurationType" />
+    </history-entry>
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="25051000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
+    <editor active="true" />
+    <layout>
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.12759463" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Messages" weight="0.32857144" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32959184" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32891566" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Database Changes" order="7" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.5153061" />
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="10" weight="0.32857144" />
+      <window_info anchor="bottom" id="CMake" order="11" weight="0.32857144" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Database" order="3" />
+    </layout>
+    <layout-to-restore>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.12759463" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Messages" order="0" visible="true" weight="0.32857144" />
+      <window_info anchor="bottom" id="Message" order="1" />
+      <window_info anchor="bottom" id="Find" order="2" />
+      <window_info anchor="bottom" id="Run" order="3" weight="0.32891566" />
+      <window_info anchor="bottom" id="Debug" order="4" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="7" />
+      <window_info anchor="bottom" id="Database Changes" order="8" />
+      <window_info anchor="bottom" id="Terminal" order="9" weight="0.2" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="11" weight="0.32857144" />
+      <window_info anchor="bottom" id="CMake" order="12" weight="0.32857144" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Database" order="3" />
+    </layout-to-restore>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="initial commit - getting gtest working" />
+    <MESSAGE value="set up" />
+    <MESSAGE value="working on key generic" />
+    <MESSAGE value="misc components added" />
+    <option name="LAST_COMMIT_MESSAGE" value="misc components added" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/external/googletest-master/Makefile" />
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/cmake_install.cmake">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="7" lean-forward="true" selection-start-line="17" selection-start-column="7" selection-end-line="17" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/external/CMakeLists.txt.in">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="24" selection-start-line="3" selection-start-column="24" selection-end-line="3" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/external/clipp.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="13" column="75" selection-start-line="13" selection-start-column="75" selection-end-line="13" selection-end-column="75" />
+          <folding>
+            <element signature="e#5414#5450#0" expanded="true" />
+            <element signature="e#5731#5753#0" expanded="true" />
+            <element signature="e#5846#5867#0" expanded="true" />
+            <element signature="e#6130#6143#0" expanded="true" />
+            <element signature="e#6250#6275#0" expanded="true" />
+            <element signature="e#6437#6459#0" expanded="true" />
+            <element signature="e#6557#6567#0" expanded="true" />
+            <element signature="e#6718#6725#0" expanded="true" />
+            <element signature="e#6837#6858#0" expanded="true" />
+            <element signature="e#6905#6941#0" expanded="true" />
+            <element signature="e#7081#7102#0" expanded="true" />
+            <element signature="e#7239#7264#0" expanded="true" />
+            <element signature="e#7406#7416#0" expanded="true" />
+            <element signature="e#7754#7763#0" expanded="true" />
+            <element signature="e#7944#7953#0" expanded="true" />
+            <element signature="e#8145#8152#0" expanded="true" />
+            <element signature="e#8248#8257#0" expanded="true" />
+            <element signature="e#8574#8583#0" expanded="true" />
+            <element signature="e#8724#8731#0" expanded="true" />
+            <element signature="e#8828#8837#0" expanded="true" />
+            <element signature="e#10104#10154#0" expanded="true" />
+            <element signature="e#10576#10594#0" expanded="true" />
+            <element signature="e#10947#10965#0" expanded="true" />
+            <element signature="e#11293#11302#0" expanded="true" />
+            <element signature="e#11560#11562#0" expanded="true" />
+            <element signature="e#11768#11770#0" expanded="true" />
+            <element signature="e#12054#12056#0" expanded="true" />
+            <element signature="e#12355#12357#0" expanded="true" />
+            <element signature="e#12638#12640#0" expanded="true" />
+            <element signature="e#12936#12938#0" expanded="true" />
+            <element signature="e#13249#13251#0" expanded="true" />
+            <element signature="e#13618#13620#0" expanded="true" />
+            <element signature="e#13835#13837#0" expanded="true" />
+            <element signature="e#14034#14036#0" expanded="true" />
+            <element signature="e#14248#14250#0" expanded="true" />
+            <element signature="e#14445#14447#0" expanded="true" />
+            <element signature="e#14622#14624#0" expanded="true" />
+            <element signature="e#14801#14803#0" expanded="true" />
+            <element signature="e#14991#14993#0" expanded="true" />
+            <element signature="e#15406#15428#0" expanded="true" />
+            <element signature="e#15502#15511#0" expanded="true" />
+            <element signature="e#16574#16583#0" expanded="true" />
+            <element signature="e#17097#17106#0" expanded="true" />
+            <element signature="e#17638#17647#0" expanded="true" />
+            <element signature="e#18277#18286#0" expanded="true" />
+            <element signature="e#18769#18778#0" expanded="true" />
+            <element signature="e#19305#19307#0" expanded="true" />
+            <element signature="e#20081#20090#0" expanded="true" />
+            <element signature="e#20426#20453#0" expanded="true" />
+            <element signature="e#21000#21027#0" expanded="true" />
+            <element signature="e#21591#21618#0" expanded="true" />
+            <element signature="e#21974#22001#0" expanded="true" />
+            <element signature="e#22566#22593#0" expanded="true" />
+            <element signature="e#23142#23169#0" expanded="true" />
+            <element signature="e#23893#23911#0" expanded="true" />
+            <element signature="e#25773#25818#0" expanded="true" />
+            <element signature="e#27106#27151#0" expanded="true" />
+            <element signature="e#28354#28381#0" expanded="true" />
+            <element signature="e#29211#29238#0" expanded="true" />
+            <element signature="e#31467#31494#0" expanded="true" />
+            <element signature="e#32635#32662#0" expanded="true" />
+            <element signature="e#33407#33434#0" expanded="true" />
+            <element signature="e#34063#34081#0" expanded="true" />
+            <element signature="e#34687#34696#0" expanded="true" />
+            <element signature="e#36085#36094#0" expanded="true" />
+            <element signature="e#36449#36458#0" expanded="true" />
+            <element signature="e#36858#36867#0" expanded="true" />
+            <element signature="e#37472#37487#0" expanded="true" />
+            <element signature="e#39584#39598#0" expanded="true" />
+            <element signature="e#39949#39976#0" expanded="true" />
+            <element signature="e#43888#43910#0" expanded="true" />
+            <element signature="e#44232#44493#0" expanded="true" />
+            <element signature="e#44768#45030#0" expanded="true" />
+            <element signature="e#45507#45521#0" expanded="true" />
+            <element signature="e#45787#45801#0" expanded="true" />
+            <element signature="e#46149#46163#0" expanded="true" />
+            <element signature="e#46429#46443#0" expanded="true" />
+            <element signature="e#48390#48405#0" expanded="true" />
+            <element signature="e#50610#50619#0" expanded="true" />
+            <element signature="e#50831#50840#0" expanded="true" />
+            <element signature="e#51066#51075#0" expanded="true" />
+            <element signature="e#51287#51296#0" expanded="true" />
+            <element signature="e#51678#51687#0" expanded="true" />
+            <element signature="e#51891#51900#0" expanded="true" />
+            <element signature="e#54651#54669#0" expanded="true" />
+            <element signature="e#54840#54858#0" expanded="true" />
+            <element signature="e#62312#62330#0" expanded="true" />
+            <element signature="e#69386#69434#0" expanded="true" />
+            <element signature="e#70096#70128#0" expanded="true" />
+            <element signature="e#70601#70633#0" expanded="true" />
+            <element signature="e#71109#71141#0" expanded="true" />
+            <element signature="e#71658#71676#0" expanded="true" />
+            <element signature="e#71971#72181#0" expanded="true" />
+            <element signature="e#72769#72787#0" expanded="true" />
+            <element signature="e#73082#73292#0" expanded="true" />
+            <element signature="e#73868#73886#0" expanded="true" />
+            <element signature="e#74187#74397#0" expanded="true" />
+            <element signature="e#74991#75009#0" expanded="true" />
+            <element signature="e#75310#75520#0" expanded="true" />
+            <element signature="e#76130#76148#0" expanded="true" />
+            <element signature="e#76744#76762#0" expanded="true" />
+            <element signature="e#77346#77364#0" expanded="true" />
+            <element signature="e#77966#77984#0" expanded="true" />
+            <element signature="e#78561#78579#0" expanded="true" />
+            <element signature="e#79161#79179#0" expanded="true" />
+            <element signature="e#79749#79767#0" expanded="true" />
+            <element signature="e#80355#80373#0" expanded="true" />
+            <element signature="e#80951#80969#0" expanded="true" />
+            <element signature="e#81555#81573#0" expanded="true" />
+            <element signature="e#82147#82165#0" expanded="true" />
+            <element signature="e#82757#82775#0" expanded="true" />
+            <element signature="e#83289#83307#0" expanded="true" />
+            <element signature="e#83775#83985#0" expanded="true" />
+            <element signature="e#85194#85220#0" expanded="true" />
+            <element signature="e#104292#104322#0" expanded="true" />
+            <element signature="e#104621#104638#0" expanded="true" />
+            <element signature="e#104886#104909#0" expanded="true" />
+            <element signature="e#111208#111253#0" expanded="true" />
+            <element signature="e#113241#113258#0" expanded="true" />
+            <element signature="e#120114#120128#0" expanded="true" />
+            <element signature="e#120412#120426#0" expanded="true" />
+            <element signature="e#122474#122504#0" expanded="true" />
+            <element signature="e#124670#124692#0" expanded="true" />
+            <element signature="e#125111#125141#0" expanded="true" />
+            <element signature="e#127414#127431#0" expanded="true" />
+            <element signature="e#127599#127622#0" expanded="true" />
+            <element signature="e#127790#127820#0" expanded="true" />
+            <element signature="e#129074#129097#0" expanded="true" />
+            <element signature="e#129294#129317#0" expanded="true" />
+            <element signature="e#130791#130821#0" expanded="true" />
+            <element signature="e#132558#132588#0" expanded="true" />
+            <element signature="e#133933#133963#0" expanded="true" />
+            <element signature="e#135700#135730#0" expanded="true" />
+            <element signature="e#149708#149729#0" expanded="true" />
+            <element signature="e#150728#150749#0" expanded="true" />
+            <element signature="e#152087#152108#0" expanded="true" />
+            <element signature="e#161774#161795#0" expanded="true" />
+            <element signature="e#162349#162370#0" expanded="true" />
+            <element signature="e#164966#164987#0" expanded="true" />
+            <element signature="e#166453#166474#0" expanded="true" />
+            <element signature="e#173431#173445#0" expanded="true" />
+            <element signature="e#183720#183741#0" expanded="true" />
+            <element signature="e#199310#199368#0" expanded="true" />
+            <element signature="e#204888#204897#0" expanded="true" />
+            <element signature="e#206065#206077#0" expanded="true" />
+            <element signature="e#206375#206384#0" expanded="true" />
+            <element signature="e#206913#206925#0" expanded="true" />
+            <element signature="e#207714#207726#0" expanded="true" />
+            <element signature="e#211561#211576#0" expanded="true" />
+            <element signature="e#212906#212921#0" expanded="true" />
+            <element signature="e#214084#214099#0" expanded="true" />
+            <element signature="e#229742#229757#0" expanded="true" />
+            <element signature="e#230505#230520#0" expanded="true" />
+            <element signature="e#231158#231173#0" expanded="true" />
+            <element signature="e#232770#232785#0" expanded="true" />
+            <element signature="e#233526#233541#0" expanded="true" />
+            <element signature="e#234868#234883#0" expanded="true" />
+            <element signature="e#240796#240811#0" expanded="true" />
+            <element signature="e#242504#242519#0" expanded="true" />
+            <element signature="e#243780#243795#0" expanded="true" />
+            <element signature="e#244192#244207#0" expanded="true" />
+            <element signature="e#244509#244524#0" expanded="true" />
+            <element signature="e#245082#245097#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/test_100_2.data">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tools/gen_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="19" selection-start-line="10" selection-start-column="19" selection-end-line="10" selection-end-column="19" />
+          <folding>
+            <element signature="e#14#24#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/misc/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" selection-start-line="1" selection-end-line="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" selection-start-line="1" selection-end-line="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/misc/sample_test.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="1" selection-start-line="8" selection-start-column="1" selection-end-line="8" selection-end-column="1" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/key_test.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="9" selection-start-line="3" selection-start-column="9" selection-end-line="3" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/misc/simple_benchmark.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="16" selection-start-line="17" selection-start-column="16" selection-end-line="17" selection-end-column="16" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/sample_test.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="25" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/leodb/value.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" selection-start-line="2" selection-end-line="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="68" selection-start-line="14" selection-start-column="68" selection-end-line="14" selection-end-column="68" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Library/Developer/CommandLineTools/usr/include/c++/v1/unordered_map">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="839" column="39" selection-start-line="839" selection-start-column="39" selection-end-line="839" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/leodb/commands.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="15" column="12" selection-start-line="15" selection-start-column="12" selection-end-line="15" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/leodb/commands.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" selection-start-line="5" selection-end-line="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/leodb/key.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="9">
+          <caret line="9" column="10" lean-forward="true" selection-start-line="9" selection-start-column="10" selection-end-line="9" selection-end-column="10" />
+          <folding>
+            <element signature="e#95#112#0" expanded="true" />
+            <element signature="e#88#97#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/leodb/entry.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="10" column="21" lean-forward="true" selection-start-line="10" selection-start-column="4" selection-end-line="10" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/leodb/db.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="26" selection-start-line="26" selection-end-line="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/leodb/key.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="20" column="8" selection-start-line="20" selection-start-column="8" selection-end-line="20" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/leodb/db.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="309">
+          <caret line="28" column="20" lean-forward="true" selection-start-line="28" selection-start-column="20" selection-end-line="28" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/leodb/value.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="22" lean-forward="true" selection-start-line="18" selection-start-column="22" selection-end-line="18" selection-end-column="22" />
+          <folding>
+            <element signature="e#126#138#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/leodb/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="1" lean-forward="true" selection-start-line="17" selection-start-column="1" selection-end-line="17" selection-end-column="1" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
