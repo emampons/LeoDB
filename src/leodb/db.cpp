@@ -1,4 +1,5 @@
 #include "db.h"
+#include "entry.h"
 
 template<class T, class U>
 bool DB<T, U>::put(Key<T> key, Value<U> value) {
@@ -9,7 +10,9 @@ bool DB<T, U>::put(Key<T> key, Value<U> value) {
      * Return: True/False if it was successful
      */
     try {
-        table[key.hashItem()] = Entry<T, U>(key, value);
+        int inserted = key.hashItem();
+        table[inserted] = Entry<T, U>(key, value);
+        //std::cout<<table[inserted].getKey().getI();
         return true;
     } catch (int e) {
         return false;
@@ -45,26 +48,71 @@ Value<T> DB<T, U>::get(Key<T> key) {
     }
 }
 
-//template<class T>
-//std::vector<Value<T> > DB::scan(Key<T> low, Key<T> high) {
-//    /*
-//     * Function scan: Get a Value from a Key in our DBMS
-//     * Param Key low: Lower-bound to scan
-//     * Param Key high: Higher-bound to scan
-//     * Return: Vector of values related to Keys between low/high
-//     */
-//    return std::vector<Value<T> >();
-//}
-//
-//template<class T>
-//int DB::min(){
-//    return -1;
-//}
-//
-//template<class T>
-//int DB<T>::max(){
-//    return -1;
-//}
+template<class T, class U>
+std::vector<Value<T> > DB<T, U>::scan(Key<T> low, Key<T> high) {
+    /*
+     * Function scan: Get a Value from a Key in our DBMS
+     * Param Key low: Lower-bound to scan
+     * Param Key high: Higher-bound to scan
+     * Return: Vector of values related to Keys between low/high
+     */
+    std::vector<Value<T> > ret;
+
+    for (auto pair: table)
+    {
+        Entry<T, U> entry = pair.second;
+        //std::cout<<entry.getKey()<<"\n";
+        if ((entry.getKey() >= low) && (entry.getKey() <= high))
+            ret.push_back(entry.getValue());
+    }
+    return  ret;
+}
+
+template<class T, class U>
+int DB<T, U>::min(bool keys){
+    int min = INT_MAX;
+    if(keys){
+        for(auto pair: table){
+            Entry<T, U> entry = pair.second;
+            if(entry.getKey() < min){
+                min = entry.getKey();
+            }
+        }
+
+    }else{
+        for(auto pair: table){
+            Entry<T, U> entry = pair.second;
+            if(entry.getValue() < min){
+                min = entry.getValue();
+            }
+        }
+    }
+
+    return min;
+}
+
+template<class T, class U>
+int DB<T, U>::max(bool keys){
+    int max = INT_MIN;
+    if(keys){
+        for(auto pair: table){
+            Entry<T, U> entry = pair.second;
+            if(entry.getKey() > max){
+                max = entry.getKey();
+            }
+        }
+
+    }else{
+        for(auto pair: table){
+            Entry<T, U> entry = pair.second;
+            if(entry.getValue() > max){
+                max = entry.getValue();
+            }
+        }
+    }
+
+    return max;
+}
 //
 template<class T, class U>
 float DB<T, U>::avg(bool keys){

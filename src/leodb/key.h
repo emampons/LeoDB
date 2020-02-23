@@ -7,9 +7,9 @@
 template<class T>
 class Key{
 public:
-    Key(){
-        item = 1;
-    }
+    Key()= default;
+
+
     explicit Key(T _item){item = _item;}
     ~Key()= default;
     bool operator == (Key other){
@@ -23,10 +23,17 @@ public:
     bool operator < (Key other){
         return item < other.item;
     }
+    bool operator >= (Key other){
+        return item >= other.item;
+    }
+    bool operator <= (Key other){
+        return item <= other.item;
+    }
     friend std::ostream& operator<<(std::ostream& os,  const Key& key){
         os << key.item << "\0";
         return os;
     }
+    T getItem (){return item;}
     int hashItem() const{return item;};
 private:
      T item;

@@ -13,12 +13,11 @@ public:
     bool put(Key<T> key, Value<U> value);
     bool del(Key<T> key);
     Value<T> get(Key<T> key);
- //   template<class T>
-//    std::vector<Value<T>> scan(Key<T> low, Key<T> high);
-//    int min();
-//    int max();
+    std::vector<Value<T> > scan(Key<T> low, Key<T> high);
+    int min(bool keys);
+    int max(bool keys);
     float avg(bool keys=true);
-//    float stddev();
+    float stddev();
 private:
     std::unordered_map<int, Entry<T, U> > table;
     int totalKeys;

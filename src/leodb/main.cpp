@@ -11,8 +11,13 @@ int main() {
     Key<int> one (5);
     Key<int> two (6);
     //std::cout << (one < two);
-    DB<int, std::string> test;
-    test.put(Key<int>(5), Value<std::string>("hi"));
-    std::cout<<test.del(Key<int>(3));
+    DB<int, int> test;
+    test.put(Key<int>(5), Value<int>(3));
+    test.put(Key<int>(4), Value<int>(32));
+    test.put(Key<int>(6), Value<int>(3132));
+    test.put(Key<int>(7), Value<int>(33));
+    test.put(Key<int>(8), Value<int>(36));
+
+    std::cout<<(test.scan(Key<int>(4), Key<int>(6)).size());
     return 0;
 }
