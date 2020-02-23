@@ -23,6 +23,15 @@ private:
     // maybe some more stuff...
 };
 
+class hashFunction {
+public:
 
+    // Use sum of lengths of first and last names
+    // as hash function.
+    size_t operator()(const Key<T>& key) const
+    {
+        return key.hashItem();
+    }
+};
 
 #endif //LEODB_DB_H

@@ -16,23 +16,10 @@ public:
         os << key.item << "\0";
         return os;
     }
-    int hashItem() const;
 private:
      T item;
+    int hashItem();
 };
-
-// Hash function used for key.item
-template<class T>
-class hashFunction{
-public:
-    // Use sum of lengths of first and last names
-    // as hash function.
-    size_t operator()(const Key<T>& key) const
-    {
-        return key.hashItem();
-    }
-};
-
 
 
 #endif //LEODB_KEY_H

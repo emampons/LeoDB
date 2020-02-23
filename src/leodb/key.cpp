@@ -1,18 +1,18 @@
 #include "key.h"
 
 template<class T>
-bool Key<T>::operator==(Key other) {
+bool Key<T>::operator==(Key<T> other) {
     return item == other.item;
 }
 
 
 template<class T>
-bool Key<T>::operator<(Key other) {
+bool Key<T>::operator<(Key<T> other) {
     return item < other.item;
 }
 
 template<class T>
-bool Key<T>::operator>(Key other) {
+bool Key<T>::operator>(Key<T> other) {
     return item > other.item;
 }
 
