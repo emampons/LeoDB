@@ -66,10 +66,25 @@ Value<T> DB<T, U>::get(Key<T> key) {
 //    return -1;
 //}
 //
-//template<class T>
-//float DB<T>::avg(){
-//    return -1;
-//}
+template<class T, class U>
+float DB<T, U>::avg(bool keys){
+    /*
+     * Function avg: Get the avg value in our DBMS
+     * Param bool key: Flag to indicate if we should search the keys or values
+     * Return: Float representing the average of all values
+     */
+    int number_of_entries = 0;
+    float sum = 0.0;
+    typename std::unordered_map<int, Entry<T, U> >::iterator iter = table.begin();
+    while(iter != table.end()){
+        if (keys){
+            sum += iter->second.getKey().getItem();
+        } else {
+            sum += iter->second.getValue().getItem();
+        }
+    }
+    return (sum/number_of_entries);
+}
 //
 //template<class T>
 //float DB<T>::stddev(){

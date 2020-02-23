@@ -17,7 +17,7 @@ public:
 //    std::vector<Value<T>> scan(Key<T> low, Key<T> high);
 //    int min();
 //    int max();
-//    float avg();
+    float avg(bool keys=true);
 //    float stddev();
 private:
     std::unordered_map<int, Entry<T, U> > table;
