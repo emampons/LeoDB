@@ -33,10 +33,10 @@ int main(int argc, char * argv[])
 {
     config cfg = cmdline_settings(argc, argv);
 
-//    templatedb::DB db;
+//    templatedb::db db;
 //    if (!db.load_from_file(cfg.fname))
 //    {
-//        fprintf(stderr, "Unable to load DB\n");
+//        fprintf(stderr, "Unable to load db\n");
 //        exit(EXIT_FAILURE);
 //    }
 //

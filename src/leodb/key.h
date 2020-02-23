@@ -9,17 +9,27 @@ class Key{
 public:
     explicit Key(T _item){item = _item;}
     ~Key()= default;
-    bool operator == (Key other);
-    bool operator > (Key other);
-    bool operator < (Key other);
+    bool operator == (Key other){
+        return item == other.item;
+    }
+
+    bool operator > (Key other){
+        return item > other.item;
+    }
+
+    bool operator < (Key other){
+        return item < other.item;
+    }
     friend std::ostream& operator<<(std::ostream& os,  const Key& key){
         os << key.item << "\0";
         return os;
     }
+    int hashItem() const{return item;};
 private:
      T item;
-    int hashItem();
 };
+
+
 
 
 #endif //LEODB_KEY_H
