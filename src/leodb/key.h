@@ -4,8 +4,7 @@
 #include "string"
 #include "iostream"
 
-
-template  <typename T>
+template<class T>
 class Key{
 public:
     explicit Key(T _item){item = _item;}
@@ -17,11 +16,21 @@ public:
         os << key.item << "\0";
         return os;
     }
-
+    int hashItem() const;
 private:
      T item;
+};
 
-
+// Hash function used for key.item
+template<class T>
+class hashFunction{
+public:
+    // Use sum of lengths of first and last names
+    // as hash function.
+    size_t operator()(const Key<T>& key) const
+    {
+        return key.hashItem();
+    }
 };
 
 
