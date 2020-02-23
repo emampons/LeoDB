@@ -10,3 +10,8 @@ template<class T, class U>
 Value<U> Entry<T, U>::getValue() {
     return value;
 }
+
+template<class T, class U>
+Key<T> Entry<T, U>::getKey() {
+    return key;
+}

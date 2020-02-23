@@ -10,6 +10,7 @@ class Entry {
 public:
     Entry()= default;
     Entry(Key<T> key, Value<U> value);
+    Key<T> getKey();
     Value<U> getValue();
 private:
     Key<T> key;
