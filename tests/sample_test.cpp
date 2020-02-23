@@ -20,6 +20,9 @@ TEST_F(DBTest, CheckAfterSize) {
 EXPECT_EQ(db1.size(), 2);
 }
 
+TEST_F(DBTest, KeyTest){
+
+}
 
 
 int main(int argc, char **argv) {

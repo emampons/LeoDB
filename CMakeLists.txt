@@ -3,7 +3,7 @@ project(leodb)
 set(CMAKE_CXX_STANDARD 14)
 
 set(leodb_lib
-        src/leodb/main.cpp src/leodb/value.cpp src/leodb/value.h src/leodb/commands.cpp src/leodb/commands.h)
+        src/leodb/main.cpp src/leodb/value.cpp src/leodb/value.h src/leodb/commands.cpp src/leodb/commands.h src/leodb/key.cpp src/leodb/key.h)
 
 add_library(${PROJECT_NAME} ${leodb_lib})
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/src)
