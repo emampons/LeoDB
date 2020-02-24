@@ -12,7 +12,6 @@ bool DB<T, U>::put(Key<T> key, Value<U> value) {
     try {
         int inserted = key.hashItem();
         table[inserted] = Entry<T, U>(key, value);
-        //std::cout<<table[inserted].getKey().getI();
         return true;
     } catch (int e) {
         return false;

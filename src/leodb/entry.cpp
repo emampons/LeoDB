@@ -1,9 +1,9 @@
 #include "entry.h"
 
 template<class T, class U>
-Entry<T, U>::Entry(Key<T> key, Value<U> value) {
-    key = key;
-    value = value;
+Entry<T, U>::Entry(Key<T> _key, Value<U> _value) {
+    key = _key;
+    value = _value;
 }
 
 template<class T, class U>

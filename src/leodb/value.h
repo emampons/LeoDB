@@ -10,19 +10,21 @@ class Value {
 public:
     Value()= default;
 
-    explicit Value(T item){
-        items.push_back(item);
+    explicit Value(T _item){
+        item = _item;
     }
-    explicit Value(std::vector<T> _items){
-        items = _items;
-    }
+
     ~Value()= default;
      bool operator == (Value other) const {
-         return other.items == items;
+         return other.item == item;
+     }
+
+     T getValue(){
+         return item;
      }
 
 private:
-    std::vector<T> items;
+    T item;
 
 };
 
