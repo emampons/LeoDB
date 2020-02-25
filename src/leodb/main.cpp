@@ -20,6 +20,8 @@ int main() {
     test.put(Key<int>(7), Value<int>(33));
     test.put(Key<int>(8), Value<int>(36));
 
-    std::cout<<(test.scan(Key<int>(4), Key<int>(5)).size());
+    //std::cout<<(test.scan(Key<int>(4), Key<int>(5)).size());
+    std::cout<<test.put(Key<int>(5), Value<int>(3));
+    std::cout<<test.put(Key<int>(5), Value<int>(3));
     return 0;
 }
