@@ -9,20 +9,12 @@ template <typename T>
 class Value {
 public:
     Value()= default;
-
-    explicit Value(T _item){
-        item = _item;
-    }
-
+    explicit Value(T _item){ item = _item;}
     ~Value()= default;
      bool operator == (Value other) const {
          return other.item == item;
      }
-
-     T getValue(){
-         return item;
-     }
-
+     T getItem(){ return item; }
 private:
     T item;
 

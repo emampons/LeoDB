@@ -14,10 +14,10 @@ public:
     bool del(Key<T> key);
     Value<T> get(Key<T> key);
     std::vector<Value<T> > scan(Key<T> low, Key<T> high);
-    int min(bool keys);
-    int max(bool keys);
+    int min(bool keys=true);
+    int max(bool keys=true);
     float avg(bool keys=true);
-    float stddev();
+    float stddev(bool keys=true);
 private:
     std::unordered_map<int, Entry<T, U> > table;
     int totalKeys;
