@@ -14,14 +14,9 @@ int main() {
     Entry<int, int> hello(one,val);
 
     DB<int, int> test;
-    test.put(Key<int>(5), Value<int>(3));
-    test.put(Key<int>(4), Value<int>(32));
-    test.put(Key<int>(6), Value<int>(3132));
-    test.put(Key<int>(7), Value<int>(33));
-    test.put(Key<int>(8), Value<int>(36));
+    test.put(Key<int>(1), Value<int>(3));
+    test.put(Key<int>(10), Value<int>(32));
 
-    //std::cout<<(test.scan(Key<int>(4), Key<int>(5)).size());
-    std::cout<<test.put(Key<int>(5), Value<int>(3));
-    std::cout<<test.put(Key<int>(5), Value<int>(3));
+    std::cout<<test.stddev(false);
     return 0;
 }

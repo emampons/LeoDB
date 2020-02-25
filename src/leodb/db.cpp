@@ -1,5 +1,7 @@
 #include "db.h"
 #include "entry.h"
+#include <cmath>
+
 
 template<class T, class U>
 bool DB<T, U>::put(Key<T> key, Value<U> value) {
@@ -9,13 +11,12 @@ bool DB<T, U>::put(Key<T> key, Value<U> value) {
      * Param Value value: Value to insert
      * Return: True/False if it was successful
      */
-    try {
-        int inserted = key.hashItem();
-        table[inserted] = Entry<T, U>(key, value);
-        return true;
-    } catch (int e) {
-        return false;
+    int inserted = key.hashItem();
+    if (table.count(inserted) == 0) {
+        totalKeys += 1;
     }
+    table[inserted] = Entry<T, U>(key, value);
+    return true;
 }
 
 
@@ -26,11 +27,11 @@ bool DB<T, U>::del(Key<T> key) {
      * Param Key key: Key to use for lookup
      * Return: True/False if it was successful
      */
-    try {
-        return table.erase(key.hashItem());
-    } catch (int e) {
-        return false;
+    bool ret = table.erase(key.hashItem());
+    if (ret){
+        totalKeys -= 1;
     }
+    return ret;
 }
 
 template<class T, class U>
@@ -43,7 +44,7 @@ Value<T> DB<T, U>::get(Key<T> key) {
     try {
         return table[key.hashItem()].getValue();
     } catch (int e) {
-        return Value<T>();
+        return NULL;
     }
 }
 
@@ -69,6 +70,11 @@ std::vector<Value<T> > DB<T, U>::scan(Key<T> low, Key<T> high) {
 
 template<class T, class U>
 int DB<T, U>::min(bool keys){
+    /*
+     * Function min: Get the min value in our DBMS
+     * Param bool key: Flag to indicate if we should search the keys or values
+     * Return: Int representing the min value
+     */
     int min = INT_MAX;
     if(keys){
         for(auto pair: table){
@@ -92,6 +98,11 @@ int DB<T, U>::min(bool keys){
 
 template<class T, class U>
 int DB<T, U>::max(bool keys){
+    /*
+     * Function max: Get the max value in our DBMS
+     * Param bool key: Flag to indicate if we should search the keys or values
+     * Return: Int representing the max value
+     */
     int max = INT_MIN;
     if(keys){
         for(auto pair: table){
@@ -120,20 +131,37 @@ float DB<T, U>::avg(bool keys){
      * Param bool key: Flag to indicate if we should search the keys or values
      * Return: Float representing the average of all values
      */
-    int number_of_entries = 0;
-    float sum = 0.0;
-    typename std::unordered_map<int, Entry<T, U> >::iterator iter = table.begin();
-    while(iter != table.end()){
+    float running_sum = 0.0;
+    for(auto pair: table){
+        Entry<T, U> entry = pair.second;
         if (keys){
-            sum += iter->second.getKey().getItem();
+            running_sum += entry.getKey().getItem();
         } else {
-            sum += iter->second.getValue().getItem();
+            running_sum += entry.getValue().getItem();
         }
     }
-    return (sum/number_of_entries);
+    return (running_sum/ ((float) totalKeys));
 }
-//
-//template<class T>
-//float DB<T>::stddev(){
-//    return -1;
-//}
+
+template<class T, class U>
+float DB<T, U>::stddev(bool keys){
+    /*
+     * Function stddev: Get the standard deviation for the data
+     * Param bool key: Flag to indicate if we should search the keys or values
+     * Return: Float representing the standard deviation of all values
+     */
+    // First get the average
+    float average = avg(keys);
+
+    // Loop over and sum the difference squared
+    float running_sum = 0.0;
+    for (auto pair: table){
+        Entry<T, U> entry = pair.second;
+        if (keys) {
+            running_sum += pow((entry.getKey().getItem() - average), 2);
+        } else {
+            running_sum += pow((entry.getValue().getItem() - average), 2);
+        }
+    }
+    return sqrt(running_sum / ((float) totalKeys-1));
+}
