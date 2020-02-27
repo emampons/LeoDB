@@ -31,6 +31,7 @@ TEST_F(KeyTest, EqualTest){
         EXPECT_EQ(comp == temp, true);
     }
 }
+
 TEST_F(KeyTest, LessThanFunctionality) {
     Key<int> previous = keys[0];
     for(int i =1; i< 10; i++){
