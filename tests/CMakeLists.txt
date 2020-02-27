@@ -1,3 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(test-leodb)
-set(test_leodb_lib src/tests/test_operators.cpp)
+
+add_executable(test_operators test_operators.cpp)
+
+target_link_libraries(test_operators PUBLIC leodb gtest)
