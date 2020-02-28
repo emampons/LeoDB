@@ -14,6 +14,19 @@ public:
      bool operator == (Value other) const {
          return other.item == item;
      }
+    bool operator > (Value other){
+        return item > other.item;
+    }
+
+    bool operator < (Value other){
+        return item < other.item;
+    }
+    bool operator >= (Value other){
+        return item >= other.item;
+    }
+    bool operator <= (Value other){
+        return item <= other.item;
+    }
      T getItem(){ return item; }
 private:
     T item;
