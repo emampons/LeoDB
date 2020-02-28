@@ -1,7 +1,6 @@
 #include <iostream>
-#include "../src/leodb/value.h"
-#include "../src/leodb/value.cpp"
-#include "gtest/gtest.h"
+#include <data/value.cpp>
+#include <gtest/gtest.h>
 
 
 class ValueTest : public ::testing::Test {

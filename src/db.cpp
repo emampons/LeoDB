@@ -1,7 +1,5 @@
-#include "db.h"
-#include "data/entry.h"
 #include <cmath>
-
+#include <db.h>
 
 template<class T, class U>
 bool DB<T, U>::put(Key<T> key, Value<U> value) {
@@ -174,4 +172,3 @@ int DB<T, U>::size(){
      */
     return totalKeys;
 }
-

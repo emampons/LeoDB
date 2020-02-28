@@ -1,3 +1,21 @@
 .idea/
-cmake-build-debug/
+cmake-build-*
 *.out
+external/*
+*.DS_Store
+*/CMakeFiles/*
+*Makefile*
+*.cmake
+CMakeCache.txt
+*.a
+googletest-build/*
+*.cbp
+*.tcl
+
+
+
+# Executables created
+leodb
+test_operators
+test_key
+test_value

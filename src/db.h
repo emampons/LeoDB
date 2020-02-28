@@ -2,23 +2,23 @@
 #define LEODB_DB_H
 
 #include <unordered_map>
-#include "data/key.h"
-#include "data/value.h"
-#include "data/entry.h"
+#include <data/key.h>
+#include <data/value.h>
+#include <data/entry.h>
 
 template <class T, class U>
 class DB {
 public:
-    DB() = default;;
+    DB() = default;
     bool put(Key<T> key, Value<U> value);
     bool del(Key<T> key);
-    int size();
     Value<T> get(Key<T> key);
     std::vector<Value<T> > scan(Key<T> low, Key<T> high);
     int min(bool keys=true);
     int max(bool keys=true);
     float avg(bool keys=true);
     float stddev(bool keys=true);
+    int size();
 private:
     std::unordered_map<int, Entry<T, U> > table;
     int totalKeys;
