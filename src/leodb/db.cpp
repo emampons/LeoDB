@@ -44,7 +44,7 @@ Value<T> DB<T, U>::get(Key<T> key) {
     try {
         return table[key.hashItem()].getValue();
     } catch (int e) {
-        return NULL;
+        return Value<T>();
     }
 }
 
@@ -79,16 +79,16 @@ int DB<T, U>::min(bool keys){
     if(keys){
         for(auto pair: table){
             Entry<T, U> entry = pair.second;
-            if(entry.getKey() < min){
-                min = entry.getKey();
+            if(entry.getKey().getItem() < min){
+                min = entry.getKey().getItem();
             }
         }
 
     }else{
         for(auto pair: table){
             Entry<T, U> entry = pair.second;
-            if(entry.getValue() < min){
-                min = entry.getValue();
+            if(entry.getValue().getItem() < min){
+                min = entry.getValue().getItem();
             }
         }
     }
@@ -107,16 +107,16 @@ int DB<T, U>::max(bool keys){
     if(keys){
         for(auto pair: table){
             Entry<T, U> entry = pair.second;
-            if(entry.getKey() > max){
-                max = entry.getKey();
+            if(entry.getKey().getItem() > max){
+                max = entry.getKey().getItem();
             }
         }
 
     }else{
         for(auto pair: table){
             Entry<T, U> entry = pair.second;
-            if(entry.getValue() > max){
-                max = entry.getValue();
+            if(entry.getValue().getItem() > max){
+                max = entry.getValue().getItem();
             }
         }
     }
@@ -165,3 +165,13 @@ float DB<T, U>::stddev(bool keys){
     }
     return sqrt(running_sum / ((float) totalKeys-1));
 }
+
+template<class T, class U>
+int DB<T, U>::size(){
+    /*
+     * Function size: Get the size of the DB
+     * Return: Int representing the size
+     */
+    return totalKeys;
+}
+

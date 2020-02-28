@@ -1,0 +1,19 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Make Test Directory
+      command:
+        cmd: >
+          mkdir test-tmp
+    - name: Compile Tests
+      command:
+        cmd: >
+          g++ -o test-tmp/test_operators.exe test_operators.cpp
+    - name: Test Operators
+      command:
+        cmd: >
+          ./test-tmp/test_operators.exe
+    - name: Clean Up Test Directory
+      file:
+        path: test-tmp
+        state: absent

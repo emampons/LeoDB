@@ -12,6 +12,7 @@ public:
     DB() = default;;
     bool put(Key<T> key, Value<U> value);
     bool del(Key<T> key);
+    int size();
     Value<T> get(Key<T> key);
     std::vector<Value<T> > scan(Key<T> low, Key<T> high);
     int min(bool keys=true);
