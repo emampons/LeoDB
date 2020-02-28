@@ -2,8 +2,8 @@
 #define LEODB_ENTRY_H
 
 
-#include "key.h"
-#include "value.h"
+#include "data/key.h"
+#include "data/value.h"
 
 template <class T, class U>
 class Entry {

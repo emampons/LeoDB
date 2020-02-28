@@ -1,11 +1,11 @@
 #include <iostream>
-#include "key.h"
+#include "data/key.h"
 #include "db.h"
-#include "value.h"
-#include "value.cpp"
+#include "data/value.h"
+#include "data/value.cpp"
 #include "db.cpp"
-#include "entry.h"
-#include "entry.cpp"
+#include "data/entry.h"
+#include "data/entry.cpp"
 
 int main() {
     Key<int> one (5);

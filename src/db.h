@@ -2,9 +2,9 @@
 #define LEODB_DB_H
 
 #include <unordered_map>
-#include "key.h"
-#include "value.h"
-#include "entry.h"
+#include "data/key.h"
+#include "data/value.h"
+#include "data/entry.h"
 
 template <class T, class U>
 class DB {
