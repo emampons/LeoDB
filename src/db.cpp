@@ -1,5 +1,5 @@
 #include "db.h"
-#include "entry.h"
+#include "data/entry.h"
 #include <cmath>
 
 
