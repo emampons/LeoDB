@@ -1,34 +1,51 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.6)
 project(leodb)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
+set(PROJECT_SOURCE_DIR .)
+add_executable(${PROJECT_NAME} main.cpp)
+include_directories(${PROJECT_SOURCE_DIR}/src)
+add_subdirectory(${PROJECT_SOURCE_DIR}/src)
+target_link_libraries(${PROJECT_NAME} leodb-src)
 
+if (${BUILD_TESTS} MATCHES "1")
+    ## Install Google Tests
+    configure_file(external/CMakeLists.txt.in ${CMAKE_BINARY_DIR}/external/googletest-download/CMakeLists.txt)
+    execute_process(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
+            WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/external/googletest-download"
+            )
+    execute_process(COMMAND "${CMAKE_COMMAND}" --build .
+            WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/external/googletest-download"
+            )
 
-set(leodb_lib
-        src/leodb/value.cpp src/leodb/value.h src/leodb/commands.cpp src/leodb/commands.h src/leodb/key.cpp src/leodb/key.h src/leodb/main.cpp src/leodb/db.cpp src/leodb/db.h)
+    # Prevent GoogleTest from overriding our compiler/linker options
+    # when building with Visual Studio
+    #set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+    # Add googletest directly to our build. This adds the following targets:
+    # gtest, gtest_main, gmock and gmock_main
+    #set(GTEST_INCLUDE ${PROJECT_SOURCE_DIR}/external/googletest-src/include)
+    #add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/external/googletest-src
+    #        ${CMAKE_CURRENT_BINARY_DIR}/external/googletest-build
+    #        EXCLUDE_FROM_ALL)
 
-add_library(${PROJECT_NAME} ${leodb_lib} src/leodb/main.cpp)
-target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/src)
+    #Add the google test subdirectory
+    set(GOOGLETEST_DIR, ${CMAKE_CURRENT_BINARY_DIR}/external/googletest-src)
+    add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/external/googletest-src)
 
-include_directories(external)
+    #include googletest/include dir
+    include_directories(${CMAKE_CURRENT_BINARY_DIR}/external/googletest-src/googletest/include)
 
-configure_file(external/CMakeLists.txt.in external/googletest-download/CMakeLists.txt)
-execute_process(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
-        WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/external/googletest-download"
-        )
-execute_process(COMMAND "${CMAKE_COMMAND}" --build .
-        WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/external/googletest-download"
-        )
+    #include the googlemock/include dir
+    include_directories(${CMAKE_CURRENT_BINARY_DIR}/external/googletest-src/googlemock/include)
 
-# Prevent GoogleTest from overriding our compiler/linker options
-# when building with Visual Studio
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+    #target_link_libraries(${PROJECT_NAME} )
+    #target_link_libraries(${PROJECT_NAME} gtest)
 
+    add_subdirectory(tests)
+    add_executable(test_operators tests/test_operators.cpp)
+    add_executable(test_key tests/test_key.cpp)
+    add_executable(test_value tests/test_value.cpp)
 
-# Add googletest directly to our build. This adds the following targets:
-# gtest, gtest_main, gmock and gmock_main
-add_subdirectory("${CMAKE_BINARY_DIR}/external/googletest-src"
-        "${CMAKE_BINARY_DIR}/external/googletest-build"
-        )
-
-add_subdirectory(misc)
-add_subdirectory(tests)
+    target_link_libraries(test_operators PUBLIC leodb-tests gtest gtest_main)
+    target_link_libraries(test_key PUBLIC leodb-tests gtest gtest_main)
+    target_link_libraries(test_value PUBLIC leodb-tests gtest gtest_main)
+endif()

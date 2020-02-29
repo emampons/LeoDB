@@ -1,7 +1,7 @@
 #include <iostream>
-#include "../src/leodb/key.h"
-#include "../src/leodb/key.cpp"
-#include "gtest/gtest.h"
+#include <data/key.h>
+#include <data/key.cpp>
+#include <gtest/gtest.h>
 
 
 class KeyTest : public ::testing::Test {

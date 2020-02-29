@@ -1,24 +1,17 @@
-#include "key.h"
+#include <data/key.h>
 
-//template<class T>
-//bool Key<T>::operator==(Key other) {
-//    return item == other.item;
-//}
-//
-//
-//template<class T>
-//bool Key<T>::operator<(Key other) {
-//    return item < other.item;
-//}
-//
-//template<class T>
-//bool Key<T>::operator>(Key other) {
-//    return item > other.item;
-//}
+template<class T>
+int Key<T>::hashItem() const{
+    /*
+     *
+     */
+    return item;
+}
 
-//template<class T>
-//int Key<T>::hashItem() {
-//    return item;
-//}
-
-
+template<class T>
+T Key<T>::getItem() {
+    /*
+     *
+     */
+    return item;
+}

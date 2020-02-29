@@ -1,13 +1,9 @@
 #include <iostream>
-#include "../src/leodb/db.h"
-#include "../src/leodb/db.cpp"
-#include "../src/leodb/key.h"
-#include "../src/leodb/key.cpp"
-#include "../src/leodb/value.h"
-#include "../src/leodb/value.h"
-#include "../src/leodb/entry.h"
-#include "../src/leodb/entry.cpp"
-#include "gtest/gtest.h"
+#include <db.cpp>
+#include <data/entry.cpp>
+#include <data/key.cpp>
+#include <data/value.cpp>
+#include <gtest/gtest.h>
 
 
 class OperatorsTest : public ::testing::Test {

@@ -1,6 +1,6 @@
-#include "entry.h"
+#include <data/entry.h>
 
-template<class T, class U>
+template <class T, class U>
 Entry<T, U>::Entry(Key<T> _key, Value<U> _value) {
     key = _key;
     value = _value;
