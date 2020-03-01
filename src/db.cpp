@@ -14,6 +14,10 @@ bool DB<T, U>::put(Key<T> key, Value<U> value) {
         totalKeys += 1;
     }
     table[inserted] = Entry<T, U>(key, value);
+    
+    if (totalKeys > MEMORY_THRESHOLD) {
+        WRITE_TO_FILE();
+    }
     return true;
 }
 
