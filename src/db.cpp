@@ -14,7 +14,7 @@ bool DB<T, U>::put(Key<T> key, Value<U> value) {
         totalKeys += 1;
     }
     table[inserted] = Entry<T, U>(key, value);
-    
+
     if (totalKeys > MEMORY_THRESHOLD) {
         WRITE_TO_FILE();
     }
@@ -209,6 +209,7 @@ bool DB<T, U>::CLOSE() {
 template<class T, class U>
 bool DB<T, U>::LOAD_FROM_FILE(const std::string& file_name) {
     std::ifstream fid(file_name);
+
     if (fid.is_open()) {
         int key;
         int value;
@@ -217,10 +218,8 @@ bool DB<T, U>::LOAD_FROM_FILE(const std::string& file_name) {
         while (std::getline(fid, line)) {
             std::stringstream linestream(line);
             std::string item;
-
             std::getline(linestream, item, ',');
             key = stoi(item);
-
             std::getline(linestream, item, ',');
             value = stoi(item);
             this->put(Key<int>(key), Value<int>(value));
@@ -237,7 +236,7 @@ bool DB<T, U>::LOAD_FROM_FILE(const std::string& file_name) {
 template<class T, class U>
 bool DB<T, U>::WRITE_TO_FILE() {
     file.clear();
-    //TODO - add file header
+    //TODO - add file header - include number of rows and cols
     struct {
         // Helper function to compare pairs
         bool operator()(const std::pair<int, Entry<T, U> > &a, const std::pair<int, Entry<T, U> > &b) const {
