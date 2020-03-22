@@ -3,7 +3,7 @@
 #include <data/entry.cpp>
 #include <data/key.cpp>
 #include <data/value.cpp>
-
+#include <loguru.cpp>
 
 int main() {
 //    Key<int> one (5);
@@ -17,5 +17,7 @@ int main() {
 //    test.put(Key<int>(10), Value<int>(32));
 
     std::cout<<test2.get(Key<int>(1)).getItem();
+    loguru::add_file("data/leodb-lob.log", loguru::Append, loguru::Verbosity_MAX);
+    LOG_F(INFO, "Hello log file!");
     return 0;
 }
