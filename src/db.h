@@ -4,9 +4,11 @@
 #include <unordered_map>
 #include <fstream>
 #include <sstream>
+#include <iostream>
 #include <data/key.h>
 #include <data/value.h>
 #include <data/entry.h>
+#include <loguru.cpp>
 
 typedef enum status{
     OPEN = 0,
@@ -15,10 +17,17 @@ typedef enum status{
     ERROR = 400,
 } DB_STATUS;
 
+// Global Constants
+std::string DATA_FOLDER_PATH = "data";
+std::string LOGGER_PATH = DATA_FOLDER_PATH + "/leodb-log.log";
+
 template <class T, class U>
 class DB {
 public:
-    DB() = default;
+    // Constructor
+    DB(std::string file_path=DATA_FOLDER_PATH, std::string logger_path=LOGGER_PATH);
+
+    // Basic Operations
     bool put(int key, int value);
     bool put(Key<T> key, Value<U> value);
     bool del(Key<T> key);
@@ -28,18 +37,30 @@ public:
     int max(bool keys=true);
     float avg(bool keys=true);
     float stddev(bool keys=true);
-    int size();
+
+    // Logistics
     DB_STATUS db_status;
     DB_STATUS OPEN_FILE();
     bool CLOSE();
-    bool LOAD_FROM_FILE(const std::string& file_name);
+    bool LOAD_FROM_FILE(std::string file_name);
+    bool DUMP_MANIFEST(std::string file_path=DATA_FOLDER_PATH);
+    bool LOAD_MANIFEST(std::string file_path=DATA_FOLDER_PATH);
+
+    // DB Information
+    int size();
+    int getHeight();
+
 private:
-    std::unordered_map<int, Entry<T, U> > table;
+    // Private Variables
+    int MEMORY_THRESHOLD;
     int totalKeys;
+    std::unordered_map<int, Entry<T, U> > table;
+    std::unordered_map<std::string, std::string> manifest;
     std::ofstream file;
-    int MEMORY_THRESHOLD = 10000;
+
+    // Private Function
     bool WRITE_TO_FILE();
-    // maybe some more stuff...
+    std::string initialize_manifest();
 };
 
 #endif //LEODB_DB_H

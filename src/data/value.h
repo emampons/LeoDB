@@ -17,7 +17,7 @@ public:
     bool operator < (Value other){ return item < other.getItem(); }
     bool operator >= (Value other){ return item >= other.getItem(); }
     bool operator <= (Value other) { return item <= other.getItem(); };
-     U getItem();
+    U getItem();
 private:
     U item;
 
