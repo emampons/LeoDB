@@ -1,11 +1,21 @@
 cmake_minimum_required(VERSION 3.6)
 project(leodb)
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(PROJECT_SOURCE_DIR .)
 add_executable(${PROJECT_NAME} main.cpp)
+
+# Add Loguru
+include_directories(${PROJECT_SOURCE_DIR}/external/loguru)
+
+# Add our DBMS directory (i.e. /src)
 include_directories(${PROJECT_SOURCE_DIR}/src)
 add_subdirectory(${PROJECT_SOURCE_DIR}/src)
-target_link_libraries(${PROJECT_NAME} leodb-src)
+
+# Target our linked Libraries
+target_link_libraries(${PROJECT_NAME})
+
+
 
 if (${BUILD_TESTS} MATCHES "1")
     ## Install Google Tests

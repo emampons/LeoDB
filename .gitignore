@@ -12,7 +12,8 @@ googletest-build/*
 *.cbp
 *.tcl
 
-
+# Logging
+data/leodb-lob.log
 
 # Executables created
 leodb
