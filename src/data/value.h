@@ -2,6 +2,7 @@
 #define LEODB_VALUE_H
 
 #include <vector>
+#include <loguru.cpp>
 
 /*
  * Class representing the value in the KV pair
@@ -17,10 +18,12 @@ public:
     bool operator < (Value other){ return item < other.getItem(); }
     bool operator >= (Value other){ return item >= other.getItem(); }
     bool operator <= (Value other) { return item <= other.getItem(); };
+    std::string getString();
     U getItem();
 private:
     U item;
 
 };
+
 
 #endif //LEODB_VALUE_H
