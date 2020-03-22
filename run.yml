@@ -55,3 +55,8 @@
             - src/libleodb-src.a
             - src/cmake_install.cmake
             - src/CmakeFiles
+            - external/loguru/CMakeFiles
+            - external/loguru/cmake_install.cmake
+            - external/loguru/libloguru.a
+            - external/loguru/loguru.cbp
+            - external/loguru/Makefile
