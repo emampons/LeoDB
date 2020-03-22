@@ -1,6 +1,25 @@
 #include <cmath>
 #include <db.h>
 
+
+template<class T, class U>
+DB<T, U>::DB(std::string file_path, std::string logger_path) {
+    /*
+     * Function constructor: Start up our DB
+     */
+    // Load our logger
+    loguru::add_file(logger_path.c_str(), loguru::Append, loguru::Verbosity_MAX);
+    LOG_F(INFO, "Logger Loaded - Starting LeoDB!");
+
+    // Initialize local variables
+    totalKeys = 0;
+    MEMORY_THRESHOLD = 10000;
+
+    // Load our Manifest file
+    LOG_F(INFO, "Loading manifest file...");
+    LOAD_MANIFEST(file_path.c_str());
+}
+
 template<class T, class U>
 bool DB<T, U>::put(Key<T> key, Value<U> value) {
     /*
@@ -29,8 +48,9 @@ bool DB<T, U>::put(int key, int value) {
      * Param Value value: Value to insert
      * Return: True/False if it was successful
      */
-    Key<T> key_object = new Key<int>(key);
-    Value<U> value_object = new Value<int>(value);
+
+    Key<int> key_object (key);
+    Value<int> value_object (value);
     return (put(key_object, value_object));
 }
 
@@ -220,8 +240,8 @@ bool DB<T, U>::CLOSE() {
 }
 
 template<class T, class U>
-bool DB<T, U>::LOAD_FROM_FILE(const std::string& file_name) {
-    std::ifstream fid(file_name);
+bool DB<T, U>::LOAD_FROM_FILE(std::string file_name) {
+    std::ifstream fid(file_name.c_str());
 
     if (fid.is_open()) {
         int key;
@@ -247,6 +267,73 @@ bool DB<T, U>::LOAD_FROM_FILE(const std::string& file_name) {
 }
 
 template<class T, class U>
+bool DB<T, U>::DUMP_MANIFEST(std::string file_path) {
+    /*
+     * Function DUMP_MANIFEST: Dump our manifest to manifest.leodb
+     * Param string: Path to our data directory
+     */
+    std::string file_name = file_path + "/manifest.leodb";
+    std::ifstream possible_file(file_name.c_str());
+    if (possible_file.is_open()) {
+        std::string new_manifest;
+        for(auto pair: manifest){
+            // Loop and add each value to string to output
+            new_manifest += pair.first + "::" + pair.second + "\n";
+        }
+        // Overwrite manifest.leodb (i.e. ofstream:trunc)
+        std::ofstream overwrite_manifest(file_name, std::ofstream::trunc);
+        overwrite_manifest << new_manifest;
+        LOG_F(INFO, "Successfully dumped manifest.leodb!");
+    } else {
+        LOG_F(ERROR, ("Error dumping manifest!" + file_name + " not found!").c_str());
+        return false;
+    }
+    return true;
+}
+
+template<class T, class U>
+bool DB<T, U>::LOAD_MANIFEST(std::string file_path) {
+    /*
+     * Function LOAD_MANIFEST: Load our manifest from a file
+     * Param string: Path to our data directory
+     */
+    std::string file_name = file_path + "/manifest.leodb";
+    std::ifstream possible_file(file_name.c_str());
+    if (possible_file.is_open()) {
+        LOG_F(INFO, "manifest.leodb exists, loading data...");
+        std::string output_text;
+        while (getline (possible_file, output_text)) {
+            std::string variable_name = output_text.substr(0, output_text.find("::"));
+            std::string variable_value = output_text.substr( output_text.find("::")+2, output_text.length());
+            manifest[variable_name] = variable_value;
+        }
+        LOG_F(INFO, "Successfully loaded manifest.leodb!");
+        return true;
+    } else {
+        LOG_F(WARNING, "manifest.leodb does not exists, initializing data...");
+        std::ofstream manifest_file(file_name);
+        manifest_file << initialize_manifest();
+        manifest_file.close();
+        manifest["Height"] = "0";
+        manifest["TierLevels"] = "0";
+        manifest["LevelLevels"] = "0";
+        return true;
+    }
+    LOG_F(ERROR, "It looks like something went wrong in LOAD_MANIFEST");
+    return false;
+}
+
+template<class T, class U>
+std::string DB<T, U>::initialize_manifest() {
+    /*
+     * Function initialize_manifest: Initialize our manifest.leodb file with initial values
+     * Return: String to output to file
+     */
+    return "Height::0\nTierLevels::0\nLevelLevels::0\n";
+}
+
+
+template<class T, class U>
 bool DB<T, U>::WRITE_TO_FILE() {
     file.clear();
     //TODO - add file header - include number of rows and cols
@@ -270,4 +357,14 @@ bool DB<T, U>::WRITE_TO_FILE() {
     totalKeys = 0;
     return true;
 }
+
+template<class T, class U>
+int DB<T, U>::getHeight() {
+    /*
+     * Function getHeight: Get the height of flushed memory
+     * Return: Integer representing the height
+     */
+    return  std::stoi(manifest["Height"]);
+}
+
 
