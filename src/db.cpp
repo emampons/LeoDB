@@ -21,6 +21,19 @@ bool DB<T, U>::put(Key<T> key, Value<U> value) {
     return true;
 }
 
+template<class T, class U>
+bool DB<T, U>::put(int key, int value) {
+    /*
+     * Function put: Takes in a int key and int value and inserts into our db
+     * Param Key key: Key to insert
+     * Param Value value: Value to insert
+     * Return: True/False if it was successful
+     */
+    Key<T> key_object = new Key<int>(key);
+    Value<U> value_object = new Value<int>(value);
+    return (put(key_object, value_object));
+}
+
 
 template<class T, class U>
 bool DB<T, U>::del(Key<T> key) {
@@ -257,3 +270,4 @@ bool DB<T, U>::WRITE_TO_FILE() {
     totalKeys = 0;
     return true;
 }
+
