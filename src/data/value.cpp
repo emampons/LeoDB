@@ -8,3 +8,17 @@ U Value<U>::getItem() {
      */
     return item;
 }
+
+template<class U>
+std::string Value<U>::getString() {
+    /*
+     * Function buildString: Get String representation of Value
+     * Return: String representation of Value
+     */
+    try {
+        return std::to_string(item);
+    } catch (int e){
+        LOG_F(ERROR, "Invalid Value item type");
+        return "";
+    }
+}

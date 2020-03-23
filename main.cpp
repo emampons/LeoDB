@@ -6,16 +6,10 @@
 #include <loguru.cpp>
 
 int main() {
-//    Key<int> one (5);
-//    Value<int> val (4);
-//    Key<int> two (6);
     DB<int, int> leodb;
-    leodb.DUMP_MANIFEST();
-    //test.CLOSE();
-    //    test.put(Key<int>(10), Value<int>(32));
-//    leodb.put(1, 1);
-    std::cout << (int) leodb.getHeight();
-
-
+    for (int x = 0; x < 500; x++){
+        leodb.put(x, x);
+    }
+    leodb.close();
     return 0;
 }

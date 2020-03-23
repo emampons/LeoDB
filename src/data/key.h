@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+#include <loguru.cpp>
 
 /*
  * Class representing the Key in the KV pair
@@ -18,12 +19,13 @@ public:
     bool operator < (Key other){ return item < other.item; }
     bool operator >= (Key other){ return item >= other.item; }
     bool operator <= (Key other){ return item <= other.item; }
+    std::string getString();
     friend std::ostream& operator<<(std::ostream& os,  const Key& key){
         os << key.item << "\0";
         return os;
     }
     T getItem ();
-    int hashItem() const;
+    int hashItem();
 private:
      T item;
 };
