@@ -34,8 +34,8 @@ public:
 
     // Basic Operations
     bool put(T _key, U _value);
-    bool del(Key<T> key);
-    Value<T> get(Key<T> key);
+    bool del(T _key);
+    Value<T> get(T _key);
     std::vector<Value<T> > scan(Key<T> low, Key<T> high);
     int min(bool keys=true);
     int max(bool keys=true);
@@ -62,6 +62,9 @@ private:
     std::ofstream file;
 
     // Private Functions
+    // Basic Operations
+    Value<U> SEARCH_MEMORY(Key<T> key);
+
     // Logistics
     bool DUMP_MANIFEST(std::string file_path=DATA_FOLDER_PATH);
     bool LOAD_MANIFEST(std::string file_path=DATA_FOLDER_PATH);
