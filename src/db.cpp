@@ -49,31 +49,38 @@ bool DB<T, U>::put(T _key, U _value) {
 
 
 template<class T, class U>
-bool DB<T, U>::del(Key<T> key) {
+bool DB<T, U>::del(T _key) {
     /*
      * Function del: Delete a key from our DBMS
-     * Param Key key: Key to use for lookup
+     * Param Key _key: Key to use for lookup
      * Return: True/False if it was successful
      */
-    bool ret = table.erase(key.hashItem());
-    if (ret) {
-        DLOG_F(INFO, ("Deleted Key: " + key.getString()).c_str());
-        totalKeys -= 1;
+    Key<T> key (_key);
+    if (table.count(key.hashItem())){
+        // Delete it from the in-memory table
+        table.erase(key.hashItem());
+    } else {
+        // Else insert the special deleted Entry
+        put(key, NULL);
     }
-    return ret;
+    DLOG_F(INFO, ("Deleted Key: " + key.getString()).c_str());
+    return true;
 }
 
 template<class T, class U>
-Value<T> DB<T, U>::get(Key<T> key) {
+Value<T> DB<T, U>::get(T _key) {
     /*
      * Function get: Get a Value from a Key in our DBMS
-     * Param Key key: Key to use for lookup
+     * Param Key _key: Key to use for lookup
      * Return: Value that was found or null if not found
      */
-    try {
+    Key<T> key (_key);
+    if (table.count(key.hashItem())){
+        // Delete it from the in-memory table
         return table[key.hashItem()].getValue();
-    } catch (int e) {
-        return Value<T>();
+    } else {
+        // Else the key is in memory
+        return SEARCH_MEMORY(key);
     }
 }
 
@@ -217,8 +224,36 @@ DB_STATUS DB<T, U>::OPEN_FILE() {
         file.close();
         db_status = ERROR;
     }
-
     return db_status;
+}
+
+template<class T, class U>
+Value<U> DB<T, U>::SEARCH_MEMORY(Key<T> key){
+    /*
+     * Function SEARCH_MEMORY: Searchers memory for a key
+     * Param Key key: Key we are looking for
+     */
+    // Hash our key
+    int key_hash = key.hashItem();
+
+    // Loop over all levels until we find the hash
+    for (int x = 0; x < std::stoi(manifest["Height"]); x++){
+        std::unordered_map<std::string, std::string> current_level = LOAD_LEVEL(std::to_string(x), "Level");
+        std::vector<std::pair<int, Entry<T, U>>> values;
+        if (current_level["Type"] == "Tier"){
+            values = load_tier_data(current_level);
+        } else if (current_level["Type"] == "Level") {
+            values = load_level_data(current_level);
+        }
+        for (auto pair: values){
+            if(pair.first == key_hash){
+                // We found our value
+                return pair.second.getValue();
+            }
+        }
+    }
+    LOG_F(WARNING, ("No value found for key " + key.getString()).c_str());
+    return Value<U>(NULL);
 }
 
 template<class T, class U>

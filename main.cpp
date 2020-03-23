@@ -10,6 +10,7 @@ int main() {
     for (int x = 0; x < 500; x++){
         leodb.put(x, x);
     }
+    std::cout << leodb.get(3).getString();
     leodb.close();
     return 0;
 }
