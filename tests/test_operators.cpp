@@ -12,7 +12,7 @@ protected:
 
     void SetUp() override {
         for (int x = 0; x < 100; x++) {
-            db.put(Key<int>(x), Value<int>(x + 100));
+//            db.put(Key<int>(x), Value<int>(x + 100));
         }
     }
 };
@@ -23,11 +23,11 @@ TEST_F(OperatorsTest, IsPutWorking) {
 }
 
 
-TEST_F(OperatorsTest, GetFunctionality) {
-    int value = db.get(Key<int>(99)).getItem();
-
-    EXPECT_EQ(value, 199);
-}
+//TEST_F(OperatorsTest, GetFunctionality) {
+//    int value = db.get(Key<int>(99)).getItem();
+//
+//    EXPECT_EQ(value, 199);
+//}
 
 
 TEST_F(OperatorsTest, MinMaxFunctionality) {
@@ -67,14 +67,14 @@ TEST_F(OperatorsTest, ScanFunctionality) {
     }
     EXPECT_EQ(response, correct_range);
 }
-
-TEST_F(OperatorsTest, DeleteFuncitonality) {
-    for (int x = 20; x <= 40; x++) {
-        db.del(Key<int>(x));
-    }
-    int size = db.size();
-    EXPECT_EQ(size, 79);
-}
+//
+//TEST_F(OperatorsTest, DeleteFuncitonality) {
+//    for (int x = 20; x <= 40; x++) {
+//        db.del(Key<int>(x));
+//    }
+//    int size = db.size();
+//    EXPECT_EQ(size, 79);
+//}
 
 
 int main(int argc, char **argv) {
