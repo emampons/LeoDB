@@ -5,9 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include <data/key.h>
-#include <data/value.h>
-#include <data/entry.h>
+#include <data/entry.cpp>
 #include <loguru.cpp>
 #include <filesystem>
 

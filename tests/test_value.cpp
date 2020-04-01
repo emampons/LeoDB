@@ -1,6 +1,7 @@
 #include <iostream>
-#include <data/value.cpp>
+//#include <data/value.cpp>
 #include <gtest/gtest.h>
+#include <db.cpp>
 
 
 class ValueTest : public ::testing::Test {

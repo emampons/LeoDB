@@ -1,8 +1,6 @@
 #include <iostream>
-#include <data/key.h>
-#include <data/key.cpp>
+#include <db.cpp>
 #include <gtest/gtest.h>
-//#include <benchmark/benchmark.h>
 
 
 class KeyTest : public ::testing::Test {
