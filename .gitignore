@@ -11,6 +11,8 @@ CMakeCache.txt
 googletest-build/*
 *.cbp
 *.tcl
+_deps/*
+*googletest-prefix/*
 
 # Logging
 data/leodb-lob.log

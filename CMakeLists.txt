@@ -15,47 +15,26 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/src)
 # Target our linked Libraries
 target_link_libraries(${PROJECT_NAME})
 
-
-
 if (${BUILD_TESTS} MATCHES "1")
-    ## Install Google Tests
-    configure_file(external/CMakeLists.txt.in ${CMAKE_BINARY_DIR}/external/googletest-download/CMakeLists.txt)
-    execute_process(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
-            WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/external/googletest-download"
-            )
-    execute_process(COMMAND "${CMAKE_COMMAND}" --build .
-            WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/external/googletest-download"
-            )
+    # Install Google Tests
+    add_subdirectory(external/googletest)
+    enable_testing()
+    include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+    macro(package_add_test TESTNAME TESTSOURCE)
+        add_executable(${TESTNAME} ${TESTSOURCE})
+        target_link_libraries(${TESTNAME} gtest gtest_main)
+    endmacro()
 
-    # Prevent GoogleTest from overriding our compiler/linker options
-    # when building with Visual Studio
-    #set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-    # Add googletest directly to our build. This adds the following targets:
-    # gtest, gtest_main, gmock and gmock_main
-    #set(GTEST_INCLUDE ${PROJECT_SOURCE_DIR}/external/googletest-src/include)
-    #add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/external/googletest-src
-    #        ${CMAKE_CURRENT_BINARY_DIR}/external/googletest-build
-    #        EXCLUDE_FROM_ALL)
+    package_add_test(test_operators tests/test_operators.cpp)
+    package_add_test(test_key tests/test_key.cpp)
+    package_add_test(test_value tests/test_value.cpp)
 
-    #Add the google test subdirectory
-    set(GOOGLETEST_DIR, ${CMAKE_CURRENT_BINARY_DIR}/external/googletest-src)
-    add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/external/googletest-src)
+    # Install Google Benchmark
+    add_subdirectory(external/googlebenchmark)
+    macro(package_add_benchmark TESTNAME TESTSOURCE)
+        add_executable(${TESTNAME} ${TESTSOURCE})
+        target_link_libraries(${TESTNAME} benchmark::benchmark)
+    endmacro()
+    package_add_benchmark(test_benchmark tests/benchmark/test_benchmark.cpp)
 
-    #include googletest/include dir
-    include_directories(${CMAKE_CURRENT_BINARY_DIR}/external/googletest-src/googletest/include)
-
-    #include the googlemock/include dir
-    include_directories(${CMAKE_CURRENT_BINARY_DIR}/external/googletest-src/googlemock/include)
-
-    #target_link_libraries(${PROJECT_NAME} )
-    #target_link_libraries(${PROJECT_NAME} gtest)
-
-    add_subdirectory(tests)
-    add_executable(test_operators tests/test_operators.cpp)
-    add_executable(test_key tests/test_key.cpp)
-    add_executable(test_value tests/test_value.cpp)
-
-    target_link_libraries(test_operators PUBLIC leodb-tests gtest gtest_main)
-    target_link_libraries(test_key PUBLIC leodb-tests gtest gtest_main)
-    target_link_libraries(test_value PUBLIC leodb-tests gtest gtest_main)
 endif()
