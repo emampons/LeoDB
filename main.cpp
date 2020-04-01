@@ -1,9 +1,5 @@
 #include <iostream>
 #include <db.cpp>
-#include <data/entry.cpp>
-#include <data/key.cpp>
-#include <data/value.cpp>
-#include <loguru.cpp>
 
 
 int main() {

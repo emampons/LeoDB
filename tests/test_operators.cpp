@@ -1,9 +1,6 @@
 #include <iostream>
-#include <db.cpp>
-#include <data/entry.cpp>
-#include <data/key.cpp>
-#include <data/value.cpp>
 #include <gtest/gtest.h>
+#include <db.cpp>
 
 
 class OperatorsTest : public ::testing::Test {

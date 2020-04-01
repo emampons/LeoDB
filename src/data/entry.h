@@ -1,8 +1,8 @@
 #ifndef LEODB_ENTRY_H
 #define LEODB_ENTRY_H
 
-#include <data/value.h>
-#include <data/key.h>
+#include <data/value.cpp>
+#include <data/key.cpp>
 #include <type_traits>
 #include <loguru.cpp>
 
