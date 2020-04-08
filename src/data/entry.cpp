@@ -7,7 +7,7 @@ Entry<T, U>::Entry(Key<T> _key, Value<U> _value) {
 }
 
 template <class T, class U>
-Entry<T, U>::Entry(std::string _key, std::string _value) {
+Entry<T, U> ::Entry(std::string _key, std::string _value) {
     /*
      * Function Constructor: Build a entry from two strings
      */

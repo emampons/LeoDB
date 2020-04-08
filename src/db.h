@@ -8,6 +8,8 @@
 #include <data/entry.cpp>
 #include <loguru.cpp>
 #include <filesystem>
+#include <bloom_filter/bloom_filter.cpp>
+#include <fence_pointer/fence_pointer.cpp>
 
 typedef enum status{
     OPEN = 0,
@@ -58,6 +60,9 @@ private:
     std::unordered_map<int, Entry<T, U> > table;
     std::unordered_map<std::string, std::string> manifest;
     std::ofstream file;
+    //Fence pointer and bloom filter
+    FencePointer fence;
+    BloomFilter bloom;
 
     // Private Functions
     // Basic Operations
@@ -68,7 +73,7 @@ private:
     bool LOAD_MANIFEST(std::string file_path=DATA_FOLDER_PATH);
     std::unordered_map<std::string, std::string> LOAD_LEVEL(std::string level, std::string type);
     bool DUMP_LEVEL(std::unordered_map<std::string, std::string> level_info);
-    bool WRITE_TO_FILE();
+    bool INIT_WRITE_TO_FILE();
     std::string initialize_manifest();
     std::string initialize_level(std::string level, std::string type, std::string max_pairs);
     void DUMP_IN_MEMORY();

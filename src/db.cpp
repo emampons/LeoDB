@@ -42,7 +42,7 @@ bool DB<T, U>::put(T _key, U _value) {
     DLOG_F(INFO, ("Added new Key/Value pair, Hash::Key:::Value->" + table[inserted].buildString()).c_str());
 
     if (totalKeys >= MEMORY_THRESHOLD) {
-        WRITE_TO_FILE();
+        INIT_WRITE_TO_FILE();
     }
     return true;
 }
@@ -80,7 +80,14 @@ Value<T> DB<T, U>::get(T _key) {
         return table[key.hashItem()].getValue();
     } else {
         // Else the key is in memory
-        return SEARCH_MEMORY(key);
+        if(bloom.query(key.hashItem())){
+           Value<T> ret = fence.search(key);
+            return ret;
+        }
+        else{
+            return SEARCH_MEMORY(key);
+        }
+
     }
 }
 
@@ -260,7 +267,7 @@ template<class T, class U>
 bool DB<T, U>::CLOSE() {
     OPEN_FILE();
     if (file.is_open()) {
-        WRITE_TO_FILE();
+        INIT_WRITE_TO_FILE();
         file.close();
     }
 
@@ -361,7 +368,7 @@ std::string DB<T, U>::initialize_manifest() {
 
 
 template<class T, class U>
-bool DB<T, U>::WRITE_TO_FILE() {
+bool DB<T, U>::INIT_WRITE_TO_FILE() {
     /*
      * Function WRITE_TO_FILE: Write our in-memory data to disk
      * Return: Bool flag if we were successful

@@ -3,32 +3,28 @@
 
 #include <vector>
 #include <string>
+#include <data/key.h>
 #include <math.h>
-#include "murmurhash.h"
+#include <bloom_filter/murmurhash.cpp>
+
 
 class BloomFilter {
 public:
     BloomFilter();
-
     BloomFilter(int numElement_, int bitsPerElement_);
-
     int numElement;
     int bitsPerElement;
-
-    void program(std::string key);
-
-    bool query(std::string key);
-
+    void program(int key);
+    bool query(int key);
     int getIndexNum();
-
     int getSize();
 
 private:
     int numIndex;
     int size;
     std::vector<bool> bf_vec;
-
     void makeBloomFilter();
-
     void getIndex(std::string key, std::vector<int> *index);
 };
+
+#endif
