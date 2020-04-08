@@ -1,4 +1,4 @@
-#include "bloom_filter.h"
+#include <bloom_filter/bloom_filter.h>
 
 
 BloomFilter::BloomFilter(){
@@ -22,18 +22,20 @@ void BloomFilter::makeBloomFilter(){
     bf_vec.resize(size, 0);
 }
 
-void BloomFilter::program( std::string key ){
+void BloomFilter::program(int key ){
+    std::string stringify = std::to_string(key);
     std::vector<int> index( numIndex, 0 );
-    getIndex( key, &index );
+    getIndex( stringify, &index );
 
     for(int i=0; i<numIndex; i++){
         bf_vec[index[i]] = 1;
     }
 }
 
-bool BloomFilter::query(std::string key ){
+bool BloomFilter::query(int key){
+    std::string stringify = std::to_string(key);
     std::vector<int> index( numIndex, 0 );
-    getIndex( key, &index );
+    getIndex( stringify, &index );
 
     for(int i=0; i<numIndex; i++){
         if( bf_vec[index[i]] == 0 )
