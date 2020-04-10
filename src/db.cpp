@@ -38,7 +38,11 @@ bool DB<T, U>::put(T _key, U _value) {
     if (table.count(inserted) == 0) {
         totalKeys += 1;
     }
-    table[inserted] = Entry<T, U>(key, value);
+    Entry<T, U> insert(key, value);
+    if( _value == nullptr)
+        insert.tomb_it();
+
+    table[inserted] = insert;
     DLOG_F(INFO, ("Added new Key/Value pair, Hash::Key:::Value->" + table[inserted].buildString()).c_str());
 
     if (totalKeys >= MEMORY_THRESHOLD) {
@@ -61,6 +65,7 @@ bool DB<T, U>::del(T _key) {
         table.erase(key.hashItem());
     } else {
         // Else insert the special deleted Entry
+
         put(key, NULL);
     }
     DLOG_F(INFO, ("Deleted Key: " + key.getString()).c_str());

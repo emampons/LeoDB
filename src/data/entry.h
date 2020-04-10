@@ -18,9 +18,12 @@ public:
     Key<T> getKey();
     Value<U> getValue();
     std::string buildString();
+    void tomb_it();
+    bool is_tomb();
 private:
     Key<T> key;
     Value<U> value;
+    int deleted;
 };
 
 #endif //LEODB_ENTRY_H
