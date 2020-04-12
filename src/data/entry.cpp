@@ -37,15 +37,27 @@ std::string Entry<T, U>::buildString() {
      * Return: String representation ready to be stored
      */
     std::string ret = std::to_string(key.hashItem()) + "::" + key.getString() + ":::" + value.getString();
+    if (deleted == 1) {
+        ret += "::::1";
+    } else {
+        ret += "::::0";
+    }
     return ret;
 }
 
 template<class T, class U>
 void Entry<T, U> :: tomb_it() {
+    /*
+     * Function tomb_it: Function to mark a entry as a tombstone (i.e. removed)
+     */
     deleted = 1;
 }
 
 template<class T, class U>
 bool Entry<T, U>::is_tomb(){
+    /*
+     * Function is_tomb: Helper function to see if a entry is a tombstone (i.e. removed)
+     * Returns True/False if it is/is not a tombstone
+     */
     return deleted;
 }

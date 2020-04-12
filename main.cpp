@@ -4,11 +4,13 @@
 
 int main() {
     DB<int, int> leodb;
-    for (int x = 0; x < 500; x++){
+    for (int x = 0; x < 499; x++){
         leodb.put(x, x);
     }
-    std::cout << leodb.get(3).getString();
+    leodb.del(0);
+//    std::cout << leodb.get(3).getString();
     leodb.close();
+
     return 0;
 }
 

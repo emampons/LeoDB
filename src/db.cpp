@@ -53,6 +53,29 @@ bool DB<T, U>::put(T _key, U _value) {
     return true;
 }
 
+template<class T, class U>
+bool DB<T, U>::put(Key<T> _key) {
+    /*
+     * Function put: Helper function for delete, Takes in a Key and makes a tombstone entry
+     * Param Key _key: Key object to insert
+     * Return: True/False if it was successful
+     */
+    // Create a Tombstone entry
+    int inserted = _key.hashItem();
+    Entry<T, U> insert(_key, Value<U>());
+    insert.tomb_it();
+
+    // Insert the new Tombstone entry
+    table[inserted] = insert;
+    DLOG_F(INFO, ("Deleted Key: " + _key.getString()));
+
+    // Flush if we need too
+    if (totalKeys >= MEMORY_THRESHOLD) {
+        INIT_WRITE_TO_FILE();
+    }
+    return true;
+}
+
 
 template<class T, class U>
 bool DB<T, U>::del(T _key) {
@@ -67,8 +90,8 @@ bool DB<T, U>::del(T _key) {
         table.erase(key.hashItem());
     } else {
         // Else insert the special deleted Entry
-
-        put(key, NULL);
+        DLOG_F(INFO, ("Inserting Tombstone for Key: " + key.getString()).c_str());
+        put(key);
     }
     DLOG_F(INFO, ("Deleted Key: " + key.getString()).c_str());
     return true;
@@ -465,7 +488,7 @@ void DB<T, U>::flush_new_level(std::unordered_map<std::string, std::string> leve
         return flush_new_level(next_level_info, sorted);
 
     } else if (current_run < max_runs) {
-        DLOG_F(INFO, ("Found free sport at level " + level_info["Level"] + ", current_run: " + level_info["CurrentRun"]).c_str());
+        DLOG_F(INFO, ("Found free spot at level " + level_info["Level"] + ", current_run: " + level_info["CurrentRun"]).c_str());
 
         // We have a free spot at this level
         std::sort(sorted.begin(), sorted.end(), customLess);
@@ -595,7 +618,8 @@ std::vector<std::pair<int, Entry<T, U>>> DB<T, U>::load_tier_data(std::unordered
         while (getline(possible_file, output_text)) {
             int hash_key_value = std::stoi(output_text.substr(0, output_text.find("::")));
             std::string key_value = output_text.substr(output_text.find("::") + 2, output_text.find(":::"));
-            std::string value_value = output_text.substr(output_text.find(":::") + 3, output_text.length());
+            std::string value_value = output_text.substr(output_text.find(":::") + 3,output_text.find("::::"));
+            std::string deleted = output_text.substr(output_text.find("::::") + 4,output_text.find("::::"));
             ret.push_back(std::pair<int, Entry<T, U> >(std::pair<int, Entry<T, U> >(hash_key_value, Entry<T, U>(key_value, value_value))));
         }
         possible_file.close();
@@ -628,7 +652,8 @@ std::vector<std::pair<int, Entry<T, U>>> DB<T, U>::load_level_data(std::unordere
         while (getline(possible_file, output_text)) {
             int hash_key_value = std::stoi(output_text.substr(0, output_text.find("::")));
             std::string key_value = output_text.substr(output_text.find("::") + 2, output_text.find(":::"));
-            std::string value_value = output_text.substr(output_text.find(":::") + 3, output_text.length());
+            std::string value_value = output_text.substr(output_text.find(":::") + 3,output_text.find("::::"));
+            std::string deleted = output_text.substr(output_text.find("::::") + 4,output_text.find("::::"));
             ret.push_back(std::pair<int, Entry<T, U> >(std::pair<int, Entry<T, U> >(hash_key_value, Entry<T, U>(key_value, value_value))));
         }
         possible_file.close();
@@ -727,11 +752,7 @@ std::string DB<T, U>::initialize_level(std::string level, std::string type, std:
      * Param String max_pairs: Max pairs we can hold in each run
      * Return: String to output to file
      */
-    return "Level::" + level +
-            "\nCurrentRun::0\nMaxRuns::" +
-            MAX_RUNS + "\nType::" + type +
-            "\nMaxPairs::" + max_pairs +
-            "\nLevelReads::0";
+    return "Level::" + level + "\nCurrentRun::0\nMaxRuns::" + MAX_RUNS + "\nType::" + type + "\nMaxPairs::" + max_pairs;
 }
 
 template<class T, class U>

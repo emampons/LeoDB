@@ -80,6 +80,10 @@ Following is a list of modules and an explanation of their functions.
 
 * **Private**
   * **Basic Operators**
+    * `bool put (Key<T> _key)`
+      * Function put: Helper function for delete, Takes in a Key and makes a tombstone entry
+      * Param Key \_key: Key object to insert
+      * Return: True/False if it was successful
     * `Value<U> SEARCH_MEMORY(Key<T> key)`
       * Function SEARCH_MEMORY: Searchers memory for a key
       * Param Key key: Key we are looking for
