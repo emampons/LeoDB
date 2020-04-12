@@ -7,6 +7,8 @@ BloomFilter::BloomFilter(){
 
     numIndex = (int)floor(0.693*bitsPerElement+ 0.5);
     size = numElement * bitsPerElement;
+
+    makeBloomFilter();
 }
 
 BloomFilter::BloomFilter( int numElement_, int bitsPerElement_ ){
@@ -41,7 +43,6 @@ bool BloomFilter::query(int key){
         if( bf_vec[index[i]] == 0 )
             return false;
     }
-
     return true; // positive
 }
 
