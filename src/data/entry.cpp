@@ -39,3 +39,13 @@ std::string Entry<T, U>::buildString() {
     std::string ret = std::to_string(key.hashItem()) + "::" + key.getString() + ":::" + value.getString();
     return ret;
 }
+
+template<class T, class U>
+void Entry<T, U> :: tomb_it() {
+    deleted = 1;
+}
+
+template<class T, class U>
+bool Entry<T, U>::is_tomb(){
+    return deleted;
+}
