@@ -11,3 +11,11 @@ int main() {
     leodb.close();
     return 0;
 }
+
+/*
+ * TODO:
+ * - Tomb search for delete
+ * - Fence pointer level update
+ * - Optimizer function
+ * - Final Testing
+ */

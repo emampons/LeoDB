@@ -14,6 +14,7 @@ DB<T, U>::DB(std::string file_path, std::string logger_path) {
     // Initialize local variables
     totalKeys = 0;
     MEMORY_THRESHOLD = IN_MEMORY_THRESHOLD;
+    monitor.set_tune(true);
 
     // Load our Manifest file
     LOG_F(INFO, "Attempting to load manifest file...");
@@ -32,6 +33,7 @@ bool DB<T, U>::put(T _key, U _value) {
      * Param Value _value: Value to insert
      * Return: True/False if it was successful
      */
+    monitor.monitor("WRITE");
     Key<T> key(_key);
     Value<U> value(_value);
     int inserted = key.hashItem();
@@ -39,8 +41,8 @@ bool DB<T, U>::put(T _key, U _value) {
         totalKeys += 1;
     }
     Entry<T, U> insert(key, value);
-    if( _value == nullptr)
-        insert.tomb_it();
+//    if( _value == nullptr)
+//        insert.tomb_it();
 
     table[inserted] = insert;
     DLOG_F(INFO, ("Added new Key/Value pair, Hash::Key:::Value->" + table[inserted].buildString()).c_str());
@@ -79,19 +81,22 @@ Value<T> DB<T, U>::get(T _key) {
      * Param Key _key: Key to use for lookup
      * Return: Value that was found or null if not found
      */
+    monitor.monitor("READ");
     Key<T> key (_key);
     if (table.count(key.hashItem())){
         // Delete it from the in-memory table
         return table[key.hashItem()].getValue();
     } else {
         // Else the key is in memory
-        if(bloom.query(key.hashItem())){
-           Value<T> ret = fence.search(key);
-            return ret;
-        }
-        else{
-            return SEARCH_MEMORY(key);
-        }
+        return SEARCH_MEMORY(key);
+        // TODO: Once we get Bloom + Fence working
+//        if(bloom.query(key.hashItem())){
+//           Value<T> ret = fence.search(key);
+//           return ret;
+//        }
+//        else{
+//            return SEARCH_MEMORY(key);
+//        }
 
     }
 }
@@ -262,7 +267,11 @@ Value<U> DB<T, U>::SEARCH_MEMORY(Key<T> key){
         }
         for (auto pair: values){
             if(pair.first == key_hash){
-                // We found our value
+                // First update our level metadata
+                current_level["LevelReads"] = std::to_string(std::stoi(current_level["LevelReads"]) + 1);
+                DUMP_LEVEL(current_level);
+
+                // Return our value
                 return pair.second.getValue();
             }
         }
@@ -498,15 +507,6 @@ void DB<T, U>::delete_level_content(std::unordered_map<std::string, std::string>
     DUMP_LEVEL(level_info);
 }
 
-template<class T, class U>
-std::unordered_map<std::string, std::string>  DB<T, U>::optimize(std::unordered_map<std::string, std::string> level_info) {
-    /*
-     * Function optimize: Consult our monitor, and determine how we should modify our level_info
-     * Param unordered_map<string, string> level_info: Information on the current level we are on
-     * Returns: Updated level_info
-     */
-    // TODO: ???
-}
 
 template<class T, class U>
 void DB<T, U>::add_data_to_level(std::unordered_map<std::string, std::string> level_info, std::string output) {
@@ -516,7 +516,7 @@ void DB<T, U>::add_data_to_level(std::unordered_map<std::string, std::string> le
      * Param String output: Output we are writing
      */
     // As our monitor what we should make the next level
-    level_info = optimize(level_info);
+    level_info = monitor.optimize(level_info);
 
     if (level_info["Type"] == "Tier"){
         // Write our data
@@ -727,7 +727,11 @@ std::string DB<T, U>::initialize_level(std::string level, std::string type, std:
      * Param String max_pairs: Max pairs we can hold in each run
      * Return: String to output to file
      */
-    return "Level::" + level + "\nCurrentRun::0\nMaxRuns::" + MAX_RUNS + "\nType::" + type + "\nMaxPairs::" + max_pairs;
+    return "Level::" + level +
+            "\nCurrentRun::0\nMaxRuns::" +
+            MAX_RUNS + "\nType::" + type +
+            "\nMaxPairs::" + max_pairs +
+            "\nLevelReads::0";
 }
 
 template<class T, class U>
