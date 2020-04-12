@@ -39,8 +39,8 @@ bool DB<T, U>::put(T _key, U _value) {
         totalKeys += 1;
     }
     Entry<T, U> insert(key, value);
-//    if( _value == nullptr)
-//        insert.tomb_it();
+    if( _value == nullptr)
+        insert.tomb_it();
 
     table[inserted] = insert;
     DLOG_F(INFO, ("Added new Key/Value pair, Hash::Key:::Value->" + table[inserted].buildString()).c_str());
@@ -85,15 +85,13 @@ Value<T> DB<T, U>::get(T _key) {
         return table[key.hashItem()].getValue();
     } else {
         // Else the key is in memory
-        return SEARCH_MEMORY(key);
-        // TODO: Once we get Bloom + Fence working
-//        if(bloom.query(key.hashItem())){
-//           Value<T> ret = fence.search(key);
-//           return ret;
-//        }
-//        else{
-//            return SEARCH_MEMORY(key);
-//        }
+        if(bloom.query(key.hashItem())){
+           Value<T> ret = fence.search(key);
+            return ret;
+        }
+        else{
+            return SEARCH_MEMORY(key);
+        }
 
     }
 }
@@ -264,11 +262,7 @@ Value<U> DB<T, U>::SEARCH_MEMORY(Key<T> key){
         }
         for (auto pair: values){
             if(pair.first == key_hash){
-                // First update our level metadata
-                current_level["LevelReads"] = std::to_string(std::stoi(current_level["LevelReads"]) + 1);
-                DUMP_LEVEL(current_level);
-
-                // Return our value
+                // We found our value
                 return pair.second.getValue();
             }
         }
@@ -397,7 +391,7 @@ bool DB<T, U>::INIT_WRITE_TO_FILE() {
         output += (pair.second.buildString() + "\n");
     }
 
-    // Start from level 0 and try to insert1
+    // Start from level 0 and try to insert
     std::unordered_map<std::string, std::string> root_level = LOAD_LEVEL("0", "Level");
 
     // TODO: Change this to by dynamic (tier vs level)
@@ -522,7 +516,7 @@ void DB<T, U>::add_data_to_level(std::unordered_map<std::string, std::string> le
      * Param String output: Output we are writing
      */
     // As our monitor what we should make the next level
-//    level_info = optimize(level_info);
+    level_info = optimize(level_info);
 
     if (level_info["Type"] == "Tier"){
         // Write our data
@@ -733,11 +727,7 @@ std::string DB<T, U>::initialize_level(std::string level, std::string type, std:
      * Param String max_pairs: Max pairs we can hold in each run
      * Return: String to output to file
      */
-    return "Level::" + level +
-            "\nCurrentRun::0\nMaxRuns::" +
-            MAX_RUNS + "\nType::" + type +
-            "\nMaxPairs::" + max_pairs +
-            "\nLevelReads::0";
+    return "Level::" + level + "\nCurrentRun::0\nMaxRuns::" + MAX_RUNS + "\nType::" + type + "\nMaxPairs::" + max_pairs;
 }
 
 template<class T, class U>
