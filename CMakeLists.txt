@@ -44,5 +44,6 @@ if (${BUILD_TESTS} MATCHES "1")
 
     # Add benchmark files
     package_add_benchmark(benchmark_level_put_500 tests/benchmark/benchmark_level/benchmark_put_500.cpp)
+    package_add_benchmark(benchmark_level_put_1000 tests/benchmark/benchmark_level/benchmark_put_1000.cpp)
     package_add_benchmark(benchmark_level_put_get_500 tests/benchmark/benchmark_level/benchmark_put_get_500.cpp)
 endif()

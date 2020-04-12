@@ -21,3 +21,4 @@
         clean_up: 1
       loop:
         - benchmark_level_put_500
+        - benchmark_level_put_1000
