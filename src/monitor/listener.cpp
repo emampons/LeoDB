@@ -15,7 +15,7 @@ std::unordered_map<std::string, std::string>  Listener::optimize(std::unordered_
      * Returns: Updated level_info
      */
     // Extract information
-    int LevelRuns = std::stoi(level_info["LevelRuns"]);
+    int level_reads = std::stoi(level_info["LevelReads"]);
     int writes = tracker["WRITES"];
     int reads = tracker["READS"];
 

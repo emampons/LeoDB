@@ -69,6 +69,7 @@ private:
     // Private Functions
     // Basic Operations
     Value<U> SEARCH_MEMORY(Key<T> key);
+    bool put(Key<T> _key);
 
     // Logistics
     bool DUMP_MANIFEST(std::string file_path=DATA_FOLDER_PATH);

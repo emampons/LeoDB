@@ -9,7 +9,7 @@ Following is a high level idea of how data is flushed to memory in LeoDB:
   * Call the `flush_new_level` starting with our root level and our sorted data
 2. Inside `flush_new_level` we check if we can add another run into the current level:
   * If we *can*:
-    * Build a output string with all of our data (i.e. `hash::key:::value`)
+    * Build a output string with all of our data (i.e. `hash::key:::value::::tombstone`)
     * Call the function `add_data_to_level` with our output string and level_info
   * If we *cannot*:
     * We found a full level!
@@ -80,6 +80,10 @@ Following is a list of modules and an explanation of their functions.
 
 * **Private**
   * **Basic Operators**
+    * `bool put (Key<T> _key)`
+      * Function put: Helper function for delete, Takes in a Key and makes a tombstone entry
+      * Param Key \_key: Key object to insert
+      * Return: True/False if it was successful
     * `Value<U> SEARCH_MEMORY(Key<T> key)`
       * Function SEARCH_MEMORY: Searchers memory for a key
       * Param Key key: Key we are looking for

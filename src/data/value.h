@@ -12,7 +12,8 @@ class Value {
 public:
     Value() = default;
     ~Value() = default;
-    explicit Value(U _item){ item = _item; }
+    Value(bool _tomb){ tomb = _tomb; }
+    Value(U _item){ item = _item; }
     bool operator == (Value other) const { return other.getItem() == item; }
     bool operator > (Value other){ return item > other.getItem(); }
     bool operator < (Value other){ return item < other.getItem(); }
@@ -20,8 +21,10 @@ public:
     bool operator <= (Value other) { return item <= other.getItem(); };
     std::string getString();
     U getItem();
+    bool getTomb(){return tomb;}
 private:
     U item;
+    bool tomb;
 
 };
 

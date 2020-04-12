@@ -11,7 +11,7 @@ public:
     ~Listener() = default;
 
     std::unordered_map<std::string, std::string>  optimize(std::unordered_map<std::string, std::string> level_info);
-    void set_tune(bool tune);
+    void set_tune(bool _tune);
     void monitor(std::string command);
 private:
     double T = 2;
