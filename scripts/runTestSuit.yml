@@ -1,0 +1,23 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Compile Test Code
+      block:
+        - name: Check if we've already compiled
+          stat:
+            path: "{{ path_to_leoDB }}/bin/leodb"
+          register: compiled_check
+        - name: Running `cmake . -DBUILD_TESTS=1`
+          shell:
+            cmd: cd "{{ path_to_leoDB }}" && cmake . -DBUILD_TESTS=1
+          when: compiled_check.stat.exists == false
+        - name: Running `make`
+          shell:
+            cmd: cd "{{ path_to_leoDB }}" && make
+          when: compiled_check.stat.exists == false
+    - name: Running Leveling Tests. Starting with put tests...
+      include_tasks: BenchmarkTests/runPutTests.yml
+      vars:
+        clean_up: 1
+      loop:
+        - benchmark_level_put_500

@@ -19,6 +19,8 @@ static void test_put_500(benchmark::State& state) {
 
 // Register the function as a benchmark
 BENCHMARK(test_put_500)->Unit(benchmark::kMillisecond);;
+
 // Run the benchmark
 BENCHMARK_MAIN();
+
 

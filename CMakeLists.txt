@@ -3,6 +3,11 @@ project(leodb)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(PROJECT_SOURCE_DIR .)
+
+# Set our output directory
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+# Add main.cpp as leoDB
 add_executable(${PROJECT_NAME} main.cpp)
 
 # Add Loguru
@@ -25,16 +30,19 @@ if (${BUILD_TESTS} MATCHES "1")
         target_link_libraries(${TESTNAME} gtest gtest_main)
     endmacro()
 
+    # Add unit test files
     package_add_test(test_operators tests/test_operators.cpp)
     package_add_test(test_key tests/test_key.cpp)
     package_add_test(test_value tests/test_value.cpp)
 
-    # Install Google Benchmark
+    # Install Google BenchmarkTests
     add_subdirectory(external/googlebenchmark)
     macro(package_add_benchmark TESTNAME TESTSOURCE)
         add_executable(${TESTNAME} ${TESTSOURCE})
         target_link_libraries(${TESTNAME} benchmark::benchmark)
     endmacro()
-    package_add_benchmark(test_benchmark tests/benchmark/test_benchmark.cpp)
 
+    # Add benchmark files
+    package_add_benchmark(benchmark_level_put_500 tests/benchmark/benchmark_level/benchmark_put_500.cpp)
+    package_add_benchmark(benchmark_level_put_get_500 tests/benchmark/benchmark_level/benchmark_put_get_500.cpp)
 endif()

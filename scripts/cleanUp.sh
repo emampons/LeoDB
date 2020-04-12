@@ -1,4 +1,6 @@
-# Clean up our enviroment
+#!/bin/bash
+# Helper scirpt to clean up our enviroment
+
 for file in 'test_value' \
             'test_key' \
             'test_operators' \
@@ -27,7 +29,11 @@ for file in 'test_value' \
             'src/cmake_install.cmake' \
             'src/CmakeFiles' \
             'CTestTestfile.cmake' \
-            'test_benchmark'
+            'external/CMakeListsTests.txt.in'
   do
     rm -r ${file}
   done
+
+# Clean up bin
+rm -r bin
+mkdir -p bin
