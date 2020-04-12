@@ -28,8 +28,8 @@ template<class T, class U>
 bool DB<T, U>::put(T _key, U _value) {
     /*
      * Function put: Takes in a Key and Value and inserts into our db
-     * Param Key key: Key to insert
-     * Param Value value: Value to insert
+     * Param Key _key: Key to insert
+     * Param Value _value: Value to insert
      * Return: True/False if it was successful
      */
     Key<T> key(_key);
@@ -219,6 +219,9 @@ int DB<T, U>::size() {
 
 template<class T, class U>
 DB_STATUS DB<T, U>::OPEN_FILE() {
+    /*
+     * Function OPEN_FILE: Open data.txt file
+     */
     this->file.open("data.txt", std::ios::out);
 
     if (file.is_open()) {
@@ -684,6 +687,8 @@ std::unordered_map<std::string, std::string> DB<T, U>::LOAD_LEVEL(std::string le
         std::ofstream level_file(file_name);
         int int_level = std::stoi(level);
         int max_runs = std::stoi(MAX_RUNS);
+
+        // Calculate the max_pairs at this level (equal to: ( max_runs^int_level ) * MEMORY_THRESHOLD
         int max_pairs = (int) (std::pow((double) max_runs, (double) int_level) * MEMORY_THRESHOLD);
 
         level_file << initialize_level(level, type, std::to_string(max_pairs));
