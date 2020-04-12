@@ -9,7 +9,7 @@ Following is a high level idea of how data is flushed to memory in LeoDB:
   * Call the `flush_new_level` starting with our root level and our sorted data
 2. Inside `flush_new_level` we check if we can add another run into the current level:
   * If we *can*:
-    * Build a output string with all of our data (i.e. `hash::key:::value`)
+    * Build a output string with all of our data (i.e. `hash::key:::value::::tombstone`)
     * Call the function `add_data_to_level` with our output string and level_info
   * If we *cannot*:
     * We found a full level!
