@@ -10,6 +10,7 @@
 #include <filesystem>
 #include <bloom_filter/bloom_filter.cpp>
 #include <fence_pointer/fence_pointer.cpp>
+#include <monitor/listener.cpp>
 
 typedef enum status{
     OPEN = 0,
@@ -63,6 +64,7 @@ private:
     //Fence pointer and bloom filter
     FencePointer fence;
     BloomFilter bloom;
+    Listener monitor;
 
     // Private Functions
     // Basic Operations
@@ -89,7 +91,6 @@ private:
     void add_data_to_level(std::unordered_map<std::string, std::string> level_info, std::string output);
     void delete_level_content(std::unordered_map<std::string, std::string> level_info);
     int get_lines_in_file(std::string file_path);
-    std::unordered_map<std::string, std::string> optimize(std::unordered_map<std::string, std::string>);
 
     struct {
         // Helper function to compare pairs
