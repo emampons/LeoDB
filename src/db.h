@@ -89,6 +89,7 @@ private:
     void add_data_to_level(std::unordered_map<std::string, std::string> level_info, std::string output);
     void delete_level_content(std::unordered_map<std::string, std::string> level_info);
     int get_lines_in_file(std::string file_path);
+    std::unordered_map<std::string, std::string> optimize(std::unordered_map<std::string, std::string>);
 
     struct {
         // Helper function to compare pairs

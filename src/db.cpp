@@ -494,12 +494,25 @@ void DB<T, U>::delete_level_content(std::unordered_map<std::string, std::string>
 }
 
 template<class T, class U>
+std::unordered_map<std::string, std::string>  DB<T, U>::optimize(std::unordered_map<std::string, std::string> level_info) {
+    /*
+     * Function optimize: Consult our monitor, and determine how we should modify our level_info
+     * Param unordered_map<string, string> level_info: Information on the current level we are on
+     * Returns: Updated level_info
+     */
+    // TODO: ???
+}
+
+template<class T, class U>
 void DB<T, U>::add_data_to_level(std::unordered_map<std::string, std::string> level_info, std::string output) {
     /*
      * Function add_data_to_level: Add output to level
      * Param unordered_map<string, string> level_info: Information on the current level we are on
      * Param String output: Output we are writing
      */
+    // As our monitor what we should make the next level
+    level_info = optimize(level_info);
+
     if (level_info["Type"] == "Tier"){
         // Write our data
         std::string folder_name = (DATA_FOLDER_PATH + "/" + level_info["Level"] + "/" + level_info["CurrentRun"]);
