@@ -7,7 +7,7 @@
 /*
  * Class representing the value in the KV pair
  */
-template <typename U>
+template <class U>
 class Value {
 public:
     Value() = default;

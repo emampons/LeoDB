@@ -23,15 +23,15 @@ typedef enum status{
 std::string DATA_FOLDER_PATH = "data";
 std::string LOGGER_PATH = DATA_FOLDER_PATH + "/leodb-log.log";
 
-// TODO: Make this dynamic
-std::string MAX_RUNS = "3";
-int IN_MEMORY_THRESHOLD = 10;
+// Default values
+std::string MAX_RUNS = "4";
+int IN_MEMORY_THRESHOLD = 500;
 
 template <class T, class U>
 class DB {
 public:
     // Constructor
-    DB(std::string file_path=DATA_FOLDER_PATH, std::string logger_path=LOGGER_PATH);
+    DB(std::string starting_level, std::string _file_path, std::string logger_path);
 
     // Basic Operations
     bool put(T _key, U _value);
@@ -48,6 +48,7 @@ public:
     DB_STATUS OPEN_FILE();
     bool CLOSE();
     bool LOAD_FROM_FILE(std::string file_name);
+    void set_tune(bool _tune);
 
     // DB Information
     int size();
@@ -58,22 +59,24 @@ private:
     // Private Variables
     int MEMORY_THRESHOLD;
     int totalKeys;
+    std::string file_path;
     std::unordered_map<int, Entry<T, U> > table;
     std::unordered_map<std::string, std::string> manifest;
     std::ofstream file;
     //Fence pointer and bloom filter
-    std::unordered_map<std::string, FencePointer> fence_pointer;
-    std::unordered_map<std::string, BloomFilter> bloom_filter;
+//    std::unordered_map<std::string, FencePointer<U, T> > fence_pointer;
+//    std::unordered_map<std::string, BloomFilter> bloom_filter;
     Listener monitor;
 
     // Private Functions
     // Basic Operations
     Value<U> SEARCH_MEMORY(Key<T> key);
     bool put(Key<T> _key);
+    Value<U> binary_search(std::vector<std::pair<int, Entry<T, U>>> values, int start, int end, int key_hash);
 
     // Logistics
-    bool DUMP_MANIFEST(std::string file_path=DATA_FOLDER_PATH);
-    bool LOAD_MANIFEST(std::string file_path=DATA_FOLDER_PATH);
+    bool DUMP_MANIFEST();
+    bool LOAD_MANIFEST();
     std::unordered_map<std::string, std::string> LOAD_LEVEL(std::string level, std::string type);
     bool DUMP_LEVEL(std::unordered_map<std::string, std::string> level_info);
     bool INIT_WRITE_TO_FILE();
@@ -82,14 +85,14 @@ private:
     void DUMP_IN_MEMORY();
     void LOAD_IN_MEMORY();
 
-    // Tier vs Leveling
+    // tier vs Leveling
     std::vector<std::pair<int, Entry<T, U> > > load_level_data(std::unordered_map<std::string, std::string> level_info);
     std::vector<std::pair<int, Entry<T, U> > > load_tier_data(std::unordered_map<std::string, std::string> level_info);
 
 
     // Flushing
     void flush_new_level(std::unordered_map<std::string, std::string> level_info, std::vector<std::pair<int, Entry<T, U> > > sorted);
-    void add_data_to_level(std::unordered_map<std::string, std::string> level_info, std::string output);
+    void add_data_to_level(std::unordered_map<std::string, std::string> level_info, std::vector<std::pair<int, Entry<T, U> > > sorted);
     void delete_level_content(std::unordered_map<std::string, std::string> level_info);
     int get_lines_in_file(std::string file_path);
 

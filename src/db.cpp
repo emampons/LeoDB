@@ -1,9 +1,8 @@
 #include <cmath>
 #include <db.h>
 
-
 template<class T, class U>
-DB<T, U>::DB(std::string file_path, std::string logger_path) {
+DB<T, U>::DB(std::string starting_level, std::string _file_path, std::string logger_path) {
     /*
      * Function constructor: Start up our DB
      */
@@ -14,15 +13,26 @@ DB<T, U>::DB(std::string file_path, std::string logger_path) {
     // Initialize local variables
     totalKeys = 0;
     MEMORY_THRESHOLD = IN_MEMORY_THRESHOLD;
+    monitor.set_starting_level(starting_level);
     monitor.set_tune(true);
+    file_path = _file_path;
 
     // Load our Manifest file
     LOG_F(INFO, "Attempting to load manifest file...");
-    LOAD_MANIFEST(file_path.c_str());
+    LOAD_MANIFEST();
 
     // Load our in-memory data
     LOG_F(INFO, "Attempting to load previous in-memory data...");
     LOAD_IN_MEMORY();
+}
+
+template<class T, class U>
+void DB<T, U>::set_tune(bool _tune) {
+    /*
+     * Function set_tune: Helper function to disable/enable tuning
+     * Param bool _tune: True/False if we should enable/disable turning
+     */
+    monitor.set_tune(_tune);
 }
 
 template<class T, class U>
@@ -44,6 +54,7 @@ bool DB<T, U>::put(T _key, U _value) {
 
     table[inserted] = insert;
     DLOG_F(INFO, ("Added new Key/Value pair, Hash::Key:::Value->" + table[inserted].buildString()).c_str());
+
 
     if (totalKeys >= MEMORY_THRESHOLD) {
         INIT_WRITE_TO_FILE();
@@ -84,10 +95,12 @@ bool DB<T, U>::del(T _key) {
      * Param Key _key: Key to use for lookup
      * Return: True/False if it was successful
      */
-    Key<T> key(_key);
-    if (table.count(key.hashItem())) {
-        // Delete it from the in-memory table
-        table.erase(key.hashItem());
+    Key<T> key (_key);
+    if (table.count(key.hashItem())){
+        // Insert the tombstone into the in-memory table
+        Entry<T, U> new_value (key, Value<U>(true));
+        new_value.tomb_it();
+        table[key.hashItem()] = new_value;
     } else {
         // Else insert the special deleted Entry
         DLOG_F(INFO, ("Inserting Tombstone for Key: " + key.getString()).c_str());
@@ -105,28 +118,40 @@ Value<T> DB<T, U>::get(T _key) {
      * Return: Value that was found or null if not found
      */
     monitor.monitor("READ");
+    DLOG_F(INFO, ("Getting " + std::to_string(_key)).c_str());
     Key<T> key(_key);
     if (table.count(key.hashItem())) {
         // Return it from the in-memory table
-        return table[key.hashItem()].getValue();
-    } else {
-        bool found = false;
-        for (auto &x : bloom_filter) {
-            if (x.second.query(key.getItem()))
-                found = true;
-        }
-        if (found) {
-            Value<T> ret;
-            for (auto &x : fence_pointer) {
-                ret = x.second.search(key);
-            }
-
-            return ret;
+        DLOG_F(INFO, "Found key in-memory!");
+        Entry<T, U> ret = table[key.hashItem()];
+        if (ret.is_tomb()){
+            return Value<U>(true);
         } else {
-            return SEARCH_MEMORY(key);
+            return ret.getValue();
         }
+    } else {
+//        bool found = false;
+//        for (auto &x : bloom_filter) {
+//            if (x.second.query(key.getItem()))
+//                found = true;
+//        }
+//        if (found) {
+//            DLOG_F(INFO, "Found key in bloom filter");
+//            Entry<T, U> ret;
+//            for (auto &x : fence_pointer) {
+//                ret = x.second.search(key);
+//            }
+//            if (ret.getKey().hashItem() == key.hashItem()) {
+//                DLOG_F(INFO, "Found key in fence pointer!");
+//                return ret.getValue();
+//            }
+//        } else {
+            DLOG_F(INFO, "Searching memory...");
+            return SEARCH_MEMORY(key);
+//        }
 
     }
+    DLOG_F(WARNING, "Uh Oh! This should not happen!");
 }
 
 template<class T, class U>
@@ -139,10 +164,30 @@ std::vector<Value<T> > DB<T, U>::scan(Key<T> low, Key<T> high) {
      */
     std::vector<Value<T> > ret;
 
+
+
     for (auto pair: table) {
+        // Check in-memory first
         Entry<T, U> entry = pair.second;
         if ((entry.getKey() >= low) && (entry.getKey() <= high))
             ret.push_back(entry.getValue());
+    }
+    for (int x = 0; x < std::stoi(manifest["Height"]); x++) {
+        std::unordered_map<std::string, std::string> current_level = LOAD_LEVEL(std::to_string(x), "level");
+        std::vector<std::pair<int, Entry<T, U>>> values;
+        if (current_level["Type"] == "tier") {
+            values = load_tier_data(current_level);
+            for (auto pair: values) {
+                if ((pair.second.getKey() >= low) && (pair.second.getKey() <= high))
+                    ret.push_back(pair.second.getValue());
+            }
+        } else if (current_level["Type"] == "level") {
+            values = load_level_data(current_level);
+            for (auto pair: values) {
+                if ((pair.second.getKey() >= low) && (pair.second.getKey() <= high))
+                    ret.push_back(pair.second.getValue());
+            }
+        }
     }
     return ret;
 }
@@ -155,19 +200,47 @@ int DB<T, U>::min(bool keys) {
      * Return: Int representing the min value
      */
     int min = INT_MAX;
-    if (keys) {
-        for (auto pair: table) {
-            Entry<T, U> entry = pair.second;
+    for (auto pair: table) {
+        // Check in-memory first
+        Entry<T, U> entry = pair.second;
+        if (keys) {
             if (entry.getKey().getItem() < min) {
                 min = entry.getKey().getItem();
             }
-        }
-
-    } else {
-        for (auto pair: table) {
-            Entry<T, U> entry = pair.second;
+        } else {
             if (entry.getValue().getItem() < min) {
                 min = entry.getValue().getItem();
+            }
+        }
+    }
+    for (int x = 0; x < std::stoi(manifest["Height"]); x++) {
+        std::unordered_map<std::string, std::string> current_level = LOAD_LEVEL(std::to_string(x), "level");
+        std::vector<std::pair<int, Entry<T, U>>> values;
+        if (current_level["Type"] == "tier") {
+            values = load_tier_data(current_level);
+            for (auto pair: values) {
+                if (keys) {
+                    if (pair.second.getKey().getItem() < min) {
+                        min = pair.second.getKey().getItem();
+                    }
+                } else {
+                    if (pair.second.getValue().getItem() < min) {
+                        min = pair.second.getValue().getItem();
+                    }
+                }
+            }
+        } else if (current_level["Type"] == "level") {
+            values = load_level_data(current_level);
+            for (auto pair: values) {
+                if (keys) {
+                    if (pair.second.getKey().getItem() < min) {
+                        min = pair.second.getKey().getItem();
+                    }
+                } else {
+                    if (pair.second.getValue().getItem() < min) {
+                        min = pair.second.getValue().getItem();
+                    }
+                }
             }
         }
     }
@@ -183,19 +256,47 @@ int DB<T, U>::max(bool keys) {
      * Return: Int representing the max value
      */
     int max = INT_MIN;
-    if (keys) {
-        for (auto pair: table) {
-            Entry<T, U> entry = pair.second;
+    for (auto pair: table) {
+        // Check in-memory first
+        Entry<T, U> entry = pair.second;
+        if (keys) {
             if (entry.getKey().getItem() > max) {
                 max = entry.getKey().getItem();
             }
-        }
-
-    } else {
-        for (auto pair: table) {
-            Entry<T, U> entry = pair.second;
+        } else {
             if (entry.getValue().getItem() > max) {
                 max = entry.getValue().getItem();
+            }
+        }
+    }
+    for (int x = 0; x < std::stoi(manifest["Height"]); x++) {
+        std::unordered_map<std::string, std::string> current_level = LOAD_LEVEL(std::to_string(x), "level");
+        std::vector<std::pair<int, Entry<T, U>>> values;
+        if (current_level["Type"] == "tier") {
+            values = load_tier_data(current_level);
+            for (auto pair: values) {
+                if (keys) {
+                    if (pair.second.getKey().getItem() > max) {
+                        max = pair.second.getKey().getItem();
+                    }
+                } else {
+                    if (pair.second.getValue().getItem() > max) {
+                        max = pair.second.getValue().getItem();
+                    }
+                }
+            }
+        } else if (current_level["Type"] == "level") {
+            values = load_level_data(current_level);
+            for (auto pair: values) {
+                if (keys) {
+                    if (pair.second.getKey().getItem() > max) {
+                        max = pair.second.getKey().getItem();
+                    }
+                } else {
+                    if (pair.second.getValue().getItem() > max) {
+                        max = pair.second.getValue().getItem();
+                    }
+                }
             }
         }
     }
@@ -203,7 +304,7 @@ int DB<T, U>::max(bool keys) {
     return max;
 }
 
-//
+
 template<class T, class U>
 float DB<T, U>::avg(bool keys) {
     /*
@@ -212,15 +313,46 @@ float DB<T, U>::avg(bool keys) {
      * Return: Float representing the average of all values
      */
     float running_sum = 0.0;
+    float total_keys = 0.0;
     for (auto pair: table) {
+        // Check in-memory first
         Entry<T, U> entry = pair.second;
         if (keys) {
             running_sum += entry.getKey().getItem();
+            total_keys += 1;
         } else {
             running_sum += entry.getValue().getItem();
+            total_keys += 1;
         }
     }
-    return (running_sum / ((float) totalKeys));
+    for (int x = 0; x < std::stoi(manifest["Height"]); x++) {
+        std::unordered_map<std::string, std::string> current_level = LOAD_LEVEL(std::to_string(x), "level");
+        std::vector<std::pair<int, Entry<T, U>>> values;
+        if (current_level["Type"] == "tier") {
+            values = load_tier_data(current_level);
+            for (auto pair: values) {
+                if (keys) {
+                    running_sum += pair.second.getKey().getItem();
+                    total_keys += 1;
+                } else {
+                    running_sum += pair.second.getValue().getItem();
+                    total_keys += 1;
+                }
+            }
+        } else if (current_level["Type"] == "level") {
+            values = load_level_data(current_level);
+            for (auto pair: values) {
+                if (keys) {
+                    running_sum += pair.second.getKey().getItem();
+                    total_keys += 1;
+                } else {
+                    running_sum += pair.second.getValue().getItem();
+                    total_keys += 1;
+                }
+                }
+            }
+    }
+    return (running_sum / total_keys );
 }
 
 template<class T, class U>
@@ -232,18 +364,49 @@ float DB<T, U>::stddev(bool keys) {
      */
     // First get the average
     float average = avg(keys);
+    float total_keys = 0.0;
+    float running_sum = 0.0;
 
     // Loop over and sum the difference squared
-    float running_sum = 0.0;
     for (auto pair: table) {
+        // Check in-memory first
         Entry<T, U> entry = pair.second;
         if (keys) {
             running_sum += pow((entry.getKey().getItem() - average), 2);
+            total_keys += 1;
         } else {
-            running_sum += pow((entry.getValue().getItem() - average), 2);
+            running_sum += pow((entry.getKey().getItem() - average), 2);
+            total_keys += 1;
         }
     }
-    return sqrt(running_sum / ((float) totalKeys - 1));
+    for (int x = 0; x < std::stoi(manifest["Height"]); x++) {
+        std::unordered_map<std::string, std::string> current_level = LOAD_LEVEL(std::to_string(x), "level");
+        std::vector<std::pair<int, Entry<T, U>>> values;
+        if (current_level["Type"] == "tier") {
+            values = load_tier_data(current_level);
+            for (auto pair: values) {
+                if (keys) {
+                    running_sum += pow((pair.second.getKey().getItem() - average), 2);
+                    total_keys += 1;
+                } else {
+                    running_sum += pow((pair.second.getKey().getItem() - average), 2);
+                    total_keys += 1;
+                }
+            }
+        } else if (current_level["Type"] == "level") {
+            values = load_level_data(current_level);
+            for (auto pair: values) {
+                if (keys) {
+                    running_sum += pow((pair.second.getKey().getItem() - average), 2);
+                    total_keys += 1;
+                } else {
+                    running_sum += pow((pair.second.getKey().getItem() - average), 2);
+                    total_keys += 1;
+                }
+            }
+        }
+    }
+    return sqrt(running_sum / total_keys);
 }
 
 template<class T, class U>
@@ -286,27 +449,59 @@ Value<U> DB<T, U>::SEARCH_MEMORY(Key<T> key) {
 
     // Loop over all levels until we find the hash
     for (int x = 0; x < std::stoi(manifest["Height"]); x++) {
-        std::unordered_map<std::string, std::string> current_level = LOAD_LEVEL(std::to_string(x), "Level");
+        std::unordered_map<std::string, std::string> current_level = LOAD_LEVEL(std::to_string(x), "level");
         std::vector<std::pair<int, Entry<T, U>>> values;
-        if (current_level["Type"] == "Tier") {
+        if (current_level["Type"] == "tier") {
             values = load_tier_data(current_level);
-        } else if (current_level["Type"] == "Level") {
-            values = load_level_data(current_level);
-        }
-        for (auto pair: values) {
-            if (pair.first == key_hash) {
-                // First update our level metadata
-                current_level["LevelReads"] = std::to_string(std::stoi(current_level["LevelReads"]) + 1);
-                DUMP_LEVEL(current_level);
+            for (auto pair: values) {
+                if (pair.first == key_hash) {
+                    // First update our level metadata
+                    current_level["LevelReads"] = std::to_string(std::stoi(current_level["LevelReads"]) + 1);
+                    DUMP_LEVEL(current_level);
 
-                // Return our value
-                return pair.second.getValue();
+                    // Return our value
+                    return pair.second.getValue();
+                }
+            }
+        } else if (current_level["Type"] == "level") {
+            values = load_level_data(current_level);
+            if (values.size() > 0) {
+                Value<U> possible_value = binary_search(values, 0, values.size(), key_hash);
+                if (!possible_value.getTomb()) {
+                    return possible_value;
+                }
             }
         }
     }
     LOG_F(WARNING, ("No value found for key " + key.getString()).c_str());
     return Value<U>(true);
 }
+
+template<class T, class U>
+Value<U> DB<T, U>::binary_search(std::vector<std::pair<int, Entry<T, U>>> values, int start, int end, int key_hash) {
+    /*
+     * Function binary_search: Binary search function
+     * Param pair<int, Entry> values: Values we are looking at
+     * Param int start: Start index
+     * Param int end: End index
+     * Param int key_hash: Key hash we are looking for
+     */
+    if (end >= start){
+        int mid = start + ((end - start) / 2);
+        if (values[mid].first == key_hash){
+            return values[mid].second.getValue();
+        }
+        if (values[mid].first > key_hash){
+            return binary_search(values, start, mid-1, key_hash);
+        }
+        if (values[mid].first < key_hash){
+            return binary_search(values, mid+1, end, key_hash);
+        }
+
+    }
+    return Value<U>(true);
+}
+
 
 template<class T, class U>
 bool DB<T, U>::CLOSE() {
@@ -347,7 +542,7 @@ bool DB<T, U>::LOAD_FROM_FILE(std::string file_name) {
 }
 
 template<class T, class U>
-bool DB<T, U>::DUMP_MANIFEST(std::string file_path) {
+bool DB<T, U>::DUMP_MANIFEST() {
     /*
      * Function DUMP_MANIFEST: Dump our manifest to manifest.leodb
      * Param string: Path to our data directory
@@ -374,12 +569,14 @@ bool DB<T, U>::DUMP_MANIFEST(std::string file_path) {
 }
 
 template<class T, class U>
-bool DB<T, U>::LOAD_MANIFEST(std::string file_path) {
+bool DB<T, U>::LOAD_MANIFEST() {
     /*
      * Function LOAD_MANIFEST: Load our manifest from a file
-     * Param string: Path to our data directory
      */
     std::string file_name = file_path + "/manifest.leodb";
+    if (!std::filesystem::exists(file_path.c_str())) {
+        std::filesystem::create_directory(file_path.c_str());
+    }
     std::ifstream possible_file(file_name.c_str());
     if (possible_file.is_open()) {
         LOG_F(INFO, "Found manifest.leodb, loading data...");
@@ -397,7 +594,7 @@ bool DB<T, U>::LOAD_MANIFEST(std::string file_path) {
         std::ofstream manifest_file(file_name);
         manifest_file << initialize_manifest();
         manifest_file.close();
-        return LOAD_MANIFEST(file_path);
+        return LOAD_MANIFEST();
     }
     return false;
 }
@@ -418,20 +615,10 @@ bool DB<T, U>::INIT_WRITE_TO_FILE() {
      * Function WRITE_TO_FILE: Write our in-memory data to disk
      * Return: Bool flag if we were successful
      */
-    //TODO - add file header - include number of rows and cols
     std::vector<std::pair<int, Entry<T, U> > > sorted(table.begin(), table.end());
 
-    // Sort and create output string
-    std::string output = "";
-    std::sort(sorted.begin(), sorted.end(), customLess);
-    for (auto pair: sorted) {
-        output += (pair.second.buildString() + "\n");
-    }
-
     // Start from level 0 and try to insert
-    std::unordered_map<std::string, std::string> root_level = LOAD_LEVEL("0", "Level");
-
-    // TODO: Change this to by dynamic (tier vs level)
+    std::unordered_map<std::string, std::string> root_level = LOAD_LEVEL("0", monitor.get_starting_level());
     DLOG_F(INFO, "Flushing data to disk...");
     flush_new_level(root_level, sorted);
 
@@ -462,18 +649,18 @@ void DB<T, U>::flush_new_level(std::unordered_map<std::string, std::string> leve
     int max_runs = std::stoi(level_info["MaxRuns"]);
 
     if (current_run == (max_runs - 1)) {
-        DLOG_F(INFO, ("Level " + level_info["Level"] + " is full").c_str());
+        DLOG_F(INFO, ("level " + level_info["level"] + " is full").c_str());
         //remove all teirs since it's going to become a new level soon
-        for(int i=0; i<max_runs; i++){
-            std::string to_remove = level_info["Level"]+"."+std::to_string(i);
-            fence_pointer.erase(to_remove);
-            bloom_filter.erase(to_remove);
-        }
+//        for(int i=0; i<max_runs; i++){
+//            std::string to_remove = level_info["level"]+"."+std::to_string(i);
+//            fence_pointer.erase(to_remove);
+//            bloom_filter.erase(to_remove);
+//        }
         // Get all data from current level -> Push down
         std::vector<std::pair<int, Entry<T, U>>> old_values;
-        if (level_info["Type"] == "Tier") {
+        if (level_info["Type"] == "tier") {
             old_values = load_tier_data(level_info);
-        } else if (level_info["Type"] == "Level") {
+        } else if (level_info["Type"] == "level") {
             old_values = load_level_data(level_info);
         }
 
@@ -481,54 +668,41 @@ void DB<T, U>::flush_new_level(std::unordered_map<std::string, std::string> leve
         for (auto pair: old_values) {
             sorted.push_back(std::pair(pair.first, pair.second));
         }
-        std::sort(sorted.begin(), sorted.end(), customLess);
-
-        // Built our output
-        std::string output;
-        for (auto pair: sorted) {
-            output += (pair.second.buildString() + "\n");
-        }
 
         // Delete level content but save level_info.leodb (increment CurrentRun)
+        DLOG_F(INFO, ("Deleting level " + level_info["level"]).c_str());
         delete_level_content(level_info);
 
         // Recursively call
-        std::string next_level_string = std::to_string(std::stoi(level_info["Level"]) + 1);
+        std::string next_level_string = std::to_string(std::stoi(level_info["level"]) + 1);
         std::unordered_map<std::string, std::string> next_level_info = LOAD_LEVEL(next_level_string,
                                                                                   level_info["Type"]);
         return flush_new_level(next_level_info, sorted);
 
     } else if (current_run < max_runs) {
-        DLOG_F(INFO, ("Found free spot at level " + level_info["Level"] + ", current_run: " +
-                      level_info["CurrentRun"]).c_str());
-
         // We have a free spot at this level
-        std::sort(sorted.begin(), sorted.end(), customLess);
-        FencePointer temp_fence;
-        BloomFilter temp_bloom;
+//        FencePointer<U, T> temp_fence;
+//        BloomFilter temp_bloom;
         // Built our output
-        std::string output = "";
+//        std::string output = "";
         std::string file_name;
-        if (level_info["Type"] == "Tier") {
-            file_name = DATA_FOLDER_PATH + "/" + level_info["Level"] + "/" + std::to_string(current_run) + "/" +
+        if (level_info["Type"] == "tier") {
+            file_name = DATA_FOLDER_PATH + "/" + level_info["level"] + "/" + std::to_string(current_run) + "/" +
                         std::to_string(current_run) + ".leodb";
-        } else if (level_info["Type"] == "Level") {
-            file_name = DATA_FOLDER_PATH + "/" + level_info["Level"] + "/" + level_info["Level"] + ".leodb";
+        } else if (level_info["Type"] == "level") {
+            file_name = DATA_FOLDER_PATH + "/" + level_info["level"] + "/" + level_info["level"] + ".leodb";
 
         }
-        for (auto pair: sorted) {
-            int key = pair.second.getKey().getItem();
-            temp_bloom.program(key);
-            temp_fence.update_pointer(pair.second, file_name);
-            output += (pair.second.buildString() + "\n");
-        }
-        std::string insert_string = level_info["Level"] + "." + std::to_string(current_run);
-        std::cout << "FILENAME: " << file_name << "\n";
-        bloom_filter[insert_string] = temp_bloom;
-        fence_pointer[insert_string] = temp_fence;
+
+//        std::string insert_string = level_info["level"] + "." + std::to_string(current_run);
+//        bloom_filter[insert_string] = temp_bloom;
+//        fence_pointer[insert_string] = temp_fence;
+
+        DLOG_F(INFO, ("Found free spot at level " + level_info["level"] + ", current_run: " + level_info["CurrentRun"]).c_str());
 
         // Add our data to this level
-        add_data_to_level(level_info, output);
+        add_data_to_level(level_info, sorted);
+
         return;
     } else {
         LOG_F(ERROR, "This should not happen, oh uh!");
@@ -541,15 +715,15 @@ void DB<T, U>::delete_level_content(std::unordered_map<std::string, std::string>
      * Function delete_level_content: Delete content for a level
      * Param unordered_map<string, string> level_info: Information on the current level we are on
      */
-    if (level_info["Type"] == "Tier") {
-        // Delete all the runs (i.e. all the folders)
+    if (level_info["Type"] == "tier") {
+        // Delete all the runs (i.e. all the content inside the folders)
         for (int x = 0; x < std::stoi(level_info["MaxRuns"]); x++) {
-            std::string old_folder = DATA_FOLDER_PATH + "/" + level_info["Level"] + "/" + std::to_string(x);
-            std::system(("exec rm -r " + old_folder).c_str());
+            std::string old_folder = DATA_FOLDER_PATH + "/" + level_info["level"] + "/" + std::to_string(x);
+            std::system(("exec rm -r " + old_folder + "/").c_str());
         }
-    } else if (level_info["Type"] == "Level") {
+    } else if (level_info["Type"] == "level") {
         // Delete the one file with the sorted run
-        std::string old_data = DATA_FOLDER_PATH + "/" + level_info["Level"] + "/" + level_info["Level"] + ".leodb";
+        std::string old_data = DATA_FOLDER_PATH + "/" + level_info["level"] + "/" + level_info["level"] + ".leodb";
         std::system(("exec rm " + old_data).c_str());
     } else {
         LOG_F(ERROR, "This should not happen, oh uh!");
@@ -560,39 +734,91 @@ void DB<T, U>::delete_level_content(std::unordered_map<std::string, std::string>
 
 
 template<class T, class U>
-void DB<T, U>::add_data_to_level(std::unordered_map<std::string, std::string> level_info, std::string output) {
+void DB<T, U>::add_data_to_level(std::unordered_map<std::string, std::string> level_info, std::vector<std::pair<int, Entry<T, U> > > sorted) {
     /*
      * Function add_data_to_level: Add output to level
      * Param unordered_map<string, string> level_info: Information on the current level we are on
-     * Param String output: Output we are writing
+     * Param unordered_map<int, Entry> sorted: Our sorted entries
      */
     // As our monitor what we should make the next level
     level_info = monitor.optimize(level_info);
 
-    if (level_info["Type"] == "Tier") {
+    if (level_info["Type"] == "tier") {
+        // Sort
+        std::sort(sorted.begin(), sorted.end(), customLess);
+
+        // Build output
+        std::string output = "";
+        for (auto pair: sorted) {
+//            int key = pair.second.getKey().getItem();
+//            temp_bloom.program(key);
+//            temp_fence.update_pointer(pair.second, file_name);
+            output += (pair.second.buildString() + "\n");
+        }
+
         // Write our data
-        std::string folder_name = (DATA_FOLDER_PATH + "/" + level_info["Level"] + "/" + level_info["CurrentRun"]);
+        std::string folder_name = (DATA_FOLDER_PATH + "/" + level_info["level"] + "/" + level_info["CurrentRun"]);
         std::string file_name = folder_name + "/" + level_info["CurrentRun"] + ".leodb";
         if (!std::filesystem::exists(folder_name.c_str())) {
             std::filesystem::create_directory(folder_name);
         }
+
         // Add the data to the current run
         std::ofstream run_file(file_name);
         run_file << output;
         run_file.close();
-    } else if (level_info["Type"] == "Level") {
+    } else if (level_info["Type"] == "level") {
         // Write to our output
-        std::string file_name = (DATA_FOLDER_PATH + "/" + level_info["Level"] + "/" + level_info["Level"] + ".leodb");
+        std::string file_name = (DATA_FOLDER_PATH + "/" + level_info["level"] + "/" + level_info["level"] + ".leodb");
         std::ifstream possible_file(file_name);
-        std::ofstream out;
+        std::string output = "";
+
         if (possible_file.is_open()) {
-            // Append to the end
-            out.open(file_name, std::ios::app);
+            // Load in all the values if they are there
+            std::string output_text;
+            while (getline (possible_file, output_text)) {
+                int hash_key_value = std::stoi(output_text.substr(0, output_text.find("::")));
+                std::string key_value = output_text.substr(output_text.find("::") + 2, output_text.find(":::"));
+                std::string value_value = output_text.substr(output_text.find(":::") + 3, output_text.find("::::"));
+                std::string deleted = output_text.substr(output_text.find("::::") + 4, output_text.find("::::"));
+                Entry<T, U> new_entry(key_value, value_value);
+                if (deleted.compare("1") != 0) {
+                    sorted.push_back(std::pair<int, Entry<T, U> >(
+                            std::pair<int, Entry<T, U> >(hash_key_value, new_entry)));
+                } else {
+                    new_entry.tomb_it();
+                    sorted.push_back(std::pair<int, Entry<T, U> >(
+                            std::pair<int, Entry<T, U> >(hash_key_value, new_entry)));
+                }
+            }
+
+            // Sort
+            std::sort(sorted.begin(), sorted.end(), customLess);
+
+            // Create output
+            for (auto pair: sorted) {
+//                int key = pair.second.getKey().getItem();
+//            temp_bloom.program(key);
+//            temp_fence.update_pointer(pair.second, file_name);
+                output += (pair.second.buildString() + "\n");
+            }
         } else {
-            // Create a new file
-            std::string run_file_name = file_name;
-            out.open(file_name);
+            // Sort
+            std::sort(sorted.begin(), sorted.end(), customLess);
+
+            // Create output
+            for (auto pair: sorted) {
+//                int key = pair.second.getKey().getItem();
+//            temp_bloom.program(key);
+//            temp_fence.update_pointer(pair.second, file_name);
+                output += (pair.second.buildString() + "\n");
+            }
         }
+
+        // Write the file
+        std::ofstream out;
+        out.open(file_name, std::ofstream::trunc);
+
         out << output;
         out.close();
         possible_file.close();
@@ -626,20 +852,20 @@ template<class T, class U>
 std::vector<std::pair<int, Entry<T, U>>>
 DB<T, U>::load_tier_data(std::unordered_map<std::string, std::string> level_info) {
     /*
-     * Function load_tier_data: Load Tier data for level
+     * Function load_tier_data: Load tier data for level
      * Param unordered_map<string, string> level_info: Information about our current level
      * Return: Vector<pair <int, Entry> > of all the old data
      */
     std::vector<std::pair<int, Entry<T, U> > > ret;
 
-    if (level_info["Type"].compare("Tier") != 0) {
+    if (level_info["Type"].compare("tier") != 0) {
         LOG_F(ERROR, ("Invalid type passed into load_tier_data, type: " + level_info["Type"]).c_str());
         return ret;
     }
 
     // Loop over runs and collect them all
-    DLOG_F(INFO, ("[Tier] Loading level " + level_info["Level"] + " data...").c_str());
-    std::string folder_path = DATA_FOLDER_PATH + "/" + level_info["Level"];
+    DLOG_F(INFO, ("[tier] Loading level " + level_info["level"] + " data...").c_str());
+    std::string folder_path = DATA_FOLDER_PATH + "/" + level_info["level"];
     std::string output_text;
     for (int x = 0; x < std::stoi(level_info["MaxRuns"]); x++) {
         std::string data_path = folder_path + "/" + std::to_string(x) + "/" + std::to_string(x) + ".leodb";
@@ -668,22 +894,22 @@ template<class T, class U>
 std::vector<std::pair<int, Entry<T, U>>>
 DB<T, U>::load_level_data(std::unordered_map<std::string, std::string> level_info) {
     /*
-     * Function load_level_data: Load Level data for level
+     * Function load_level_data: Load level data for level
      * Param unordered_map<string, string> level_info: Information about our current level
      * Return: Vector<pair <int, Entry> > of all the old data
      */
     // Previous data is sorted, so just load in order
     std::vector<std::pair<int, Entry<T, U> > > ret;
 
-    if (level_info["Type"] != "Level") {
+    if (level_info["Type"] != "level") {
         LOG_F(ERROR, ("Invalid type passed into load_level_data, type: " + level_info["Type"]).c_str());
         return ret;
     }
 
     // Get path to level data file
-    std::ifstream possible_file(DATA_FOLDER_PATH + "/" + level_info["Level"] + "/" + level_info["Level"] + ".leodb");
+    std::ifstream possible_file(DATA_FOLDER_PATH + "/" + level_info["level"] + "/" + level_info["level"] + ".leodb");
     if (possible_file.is_open()) {
-        DLOG_F(INFO, ("[Level] Loading " + level_info["Level"] + ".leodb...").c_str());
+        DLOG_F(INFO, ("[level] Loading " + level_info["level"] + ".leodb...").c_str());
 
         // Load all values into ret
         std::string output_text;
@@ -705,7 +931,7 @@ DB<T, U>::load_level_data(std::unordered_map<std::string, std::string> level_inf
         possible_file.close();
         return ret;
     }
-    LOG_F(WARNING, ("Level " + level_info["Level"] + " is empty").c_str());
+    LOG_F(WARNING, ("level " + level_info["level"] + " is empty").c_str());
     return ret;
 }
 
@@ -717,7 +943,7 @@ bool DB<T, U>::DUMP_LEVEL(std::unordered_map<std::string, std::string> level_inf
      * Param unordered_map<string, string> level_info: Map holding all our level info
      * Return: Bool flag to indicate if we were able to update the level info
      */
-    std::string level_info_file = DATA_FOLDER_PATH + "/" + level_info["Level"] + "/level_info.leodb";
+    std::string level_info_file = DATA_FOLDER_PATH + "/" + level_info["level"] + "/level_info.leodb";
     std::ifstream possible_file(level_info_file.c_str());
     if (possible_file.is_open()) {
         std::string new_level_info;
@@ -728,10 +954,10 @@ bool DB<T, U>::DUMP_LEVEL(std::unordered_map<std::string, std::string> level_inf
         // Overwrite level_info.leodb (i.e. ofstream:trunc)
         std::ofstream overwrite_level_info(level_info_file, std::ofstream::trunc);
         overwrite_level_info << new_level_info;
-        LOG_F(INFO, ("Successfully dumped level " + level_info["Level"] + "!").c_str());
+        LOG_F(INFO, ("Successfully dumped level " + level_info["level"] + "!").c_str());
         possible_file.close();
     } else {
-        LOG_F(ERROR, ("Error dumping level " + level_info["Level"] + "!").c_str());
+        LOG_F(ERROR, ("Error dumping level " + level_info["level"] + "!").c_str());
         return false;
     }
     return true;
@@ -741,8 +967,8 @@ template<class T, class U>
 std::unordered_map<std::string, std::string> DB<T, U>::LOAD_LEVEL(std::string level, std::string type) {
     /*
      * Function LOAD_LEVEL: Load and return level_info.leodb data
-     * Param String level: Level we are looking for as a string
-     * Param String type: Type of level (Level or Tier)
+     * Param String level: level we are looking for as a string
+     * Param String type: Type of level (level or tier)
      * Return: unordered_map<string, string> of relevant information
      */
     std::unordered_map<std::string, std::string> ret;
@@ -794,12 +1020,12 @@ template<class T, class U>
 std::string DB<T, U>::initialize_level(std::string level, std::string type, std::string max_pairs) {
     /*
      * Function initialize_level: Initialize our level_info.leodb file with initial values
-     * Param String level: Level we are looking at
-     * Param String type: Type of level (Level or Tier)
+     * Param String level: level we are looking at
+     * Param String type: Type of level (level or tier)
      * Param String max_pairs: Max pairs we can hold in each run
      * Return: String to output to file
      */
-    return "Level::" + level +
+    return "level::" + level +
            "\nCurrentRun::0" +
            "\nMaxRuns::" + MAX_RUNS +
            "\nType::" + type +
@@ -860,6 +1086,3 @@ void DB<T, U>::LOAD_IN_MEMORY() {
     }
     possible_file.close();
 }
-
-
-

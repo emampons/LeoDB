@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# Verbose, show commands as we run them
+set -x
+
 # Helper scirpt to clean up our enviroment
 
 for file in 'test_value' \

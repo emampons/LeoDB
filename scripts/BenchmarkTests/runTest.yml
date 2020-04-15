@@ -1,10 +1,10 @@
 - name: "Run Test: {{ item }}"
   shell:
-    cmd: cd "{{ path_to_leoDB }}/bin" && ./{{ item }}
+    cmd: "{{ path_to_leoDB }}/bin/{{ item }}"
   register: test_results
 - debug:
     msg: "{{ test_results.stdout_lines }}"
 - name: "Deleting database contents"
   shell:
-    cmd: cd "{{ path_to_leoDB }}" && scripts/deleteData.sh 1
+    cmd: "{{ path_to_leoDB }}/scripts/deleteData.sh 1"
   when: clean_up is defined

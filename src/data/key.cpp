@@ -3,7 +3,8 @@
 template<class T>
 int Key<T>::hashItem() {
     /*
-     *
+     * Function hashItem: Function to hash the key to turn it into an int
+     * Return: Int hash version of the key
      */
     return item;
 }
@@ -11,7 +12,8 @@ int Key<T>::hashItem() {
 template<class T>
 T Key<T>::getItem() {
     /*
-     *
+     * Function getItem: Gets the Key item
+     * Return: Key object
      */
     return item;
 }
