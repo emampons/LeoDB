@@ -7,6 +7,7 @@ BloomFilter::BloomFilter(){
 
     numIndex = (int)floor(0.693*bitsPerElement+ 0.5);
     size = numElement * bitsPerElement;
+    makeBloomFilter();
 }
 
 BloomFilter::BloomFilter( int numElement_, int bitsPerElement_ ){
