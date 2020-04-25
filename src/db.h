@@ -62,8 +62,8 @@ private:
     std::unordered_map<std::string, std::string> manifest;
     std::ofstream file;
     //Fence pointer and bloom filter
-    FencePointer fence;
-    BloomFilter bloom;
+    std::unordered_map<std::string, FencePointer> fence_pointer;
+    std::unordered_map<std::string, BloomFilter> bloom_filter;
     Listener monitor;
 
     // Private Functions

@@ -6,7 +6,7 @@
 #include <data/key.h>
 #include <math.h>
 #include <bloom_filter/murmurhash.cpp>
-
+#include <unordered_map>
 
 class BloomFilter {
 public:
@@ -22,8 +22,10 @@ public:
 private:
     int numIndex;
     int size;
+    int level = 0;
     std::vector<bool> bf_vec;
     void makeBloomFilter();
+    std::unordered_map<int, std::vector<bool>>  map;
     void getIndex(std::string key, std::vector<int> *index);
 };
 

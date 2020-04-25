@@ -84,8 +84,8 @@ bool DB<T, U>::del(T _key) {
      * Param Key _key: Key to use for lookup
      * Return: True/False if it was successful
      */
-    Key<T> key (_key);
-    if (table.count(key.hashItem())){
+    Key<T> key(_key);
+    if (table.count(key.hashItem())) {
         // Delete it from the in-memory table
         table.erase(key.hashItem());
     } else {
@@ -105,21 +105,26 @@ Value<T> DB<T, U>::get(T _key) {
      * Return: Value that was found or null if not found
      */
     monitor.monitor("READ");
-    Key<T> key (_key);
-    if (table.count(key.hashItem())){
+    Key<T> key(_key);
+    if (table.count(key.hashItem())) {
         // Return it from the in-memory table
         return table[key.hashItem()].getValue();
     } else {
-        // Else the key is in memory
-        return SEARCH_MEMORY(key);
-        // TODO: Once we get Bloom + Fence working
-//        if(bloom.query(key.hashItem())){
-//           Value<T> ret = fence.search(key);
-//           return ret;
-//        }
-//        else{
-//            return SEARCH_MEMORY(key);
-//        }
+        bool found = false;
+        for (auto &x : bloom_filter) {
+            if (x.second.query(key.getItem()))
+                found = true;
+        }
+        if (found) {
+            Value<T> ret;
+            for (auto &x : fence_pointer) {
+                ret = x.second.search(key);
+            }
+
+            return ret;
+        } else {
+            return SEARCH_MEMORY(key);
+        }
 
     }
 }
@@ -271,7 +276,7 @@ DB_STATUS DB<T, U>::OPEN_FILE() {
 }
 
 template<class T, class U>
-Value<U> DB<T, U>::SEARCH_MEMORY(Key<T> key){
+Value<U> DB<T, U>::SEARCH_MEMORY(Key<T> key) {
     /*
      * Function SEARCH_MEMORY: Searchers memory for a key
      * Param Key key: Key we are looking for
@@ -280,16 +285,16 @@ Value<U> DB<T, U>::SEARCH_MEMORY(Key<T> key){
     int key_hash = key.hashItem();
 
     // Loop over all levels until we find the hash
-    for (int x = 0; x < std::stoi(manifest["Height"]); x++){
+    for (int x = 0; x < std::stoi(manifest["Height"]); x++) {
         std::unordered_map<std::string, std::string> current_level = LOAD_LEVEL(std::to_string(x), "Level");
         std::vector<std::pair<int, Entry<T, U>>> values;
-        if (current_level["Type"] == "Tier"){
+        if (current_level["Type"] == "Tier") {
             values = load_tier_data(current_level);
         } else if (current_level["Type"] == "Level") {
             values = load_level_data(current_level);
         }
-        for (auto pair: values){
-            if(pair.first == key_hash){
+        for (auto pair: values) {
+            if (pair.first == key_hash) {
                 // First update our level metadata
                 current_level["LevelReads"] = std::to_string(std::stoi(current_level["LevelReads"]) + 1);
                 DUMP_LEVEL(current_level);
@@ -351,7 +356,7 @@ bool DB<T, U>::DUMP_MANIFEST(std::string file_path) {
     std::ifstream possible_file(file_name.c_str());
     if (possible_file.is_open()) {
         std::string new_manifest;
-        for(auto pair: manifest){
+        for (auto pair: manifest) {
             // Loop and add each value to string to output
             new_manifest += pair.first + "::" + pair.second + "\n";
         }
@@ -379,9 +384,9 @@ bool DB<T, U>::LOAD_MANIFEST(std::string file_path) {
     if (possible_file.is_open()) {
         LOG_F(INFO, "Found manifest.leodb, loading data...");
         std::string output_text;
-        while (getline (possible_file, output_text)) {
+        while (getline(possible_file, output_text)) {
             std::string variable_name = output_text.substr(0, output_text.find("::"));
-            std::string variable_value = output_text.substr( output_text.find("::")+2, output_text.length());
+            std::string variable_value = output_text.substr(output_text.find("::") + 2, output_text.length());
             manifest[variable_name] = variable_value;
         }
         LOG_F(INFO, "Successfully loaded manifest.leodb!");
@@ -442,12 +447,12 @@ int DB<T, U>::getHeight() {
      * Function getHeight: Get the height of flushed memory
      * Return: Integer representing the height
      */
-    return  std::stoi(manifest["Height"]);
+    return std::stoi(manifest["Height"]);
 }
 
 template<class T, class U>
 void DB<T, U>::flush_new_level(std::unordered_map<std::string, std::string> level_info,
-                                     std::vector<std::pair<int, Entry<T, U>>> sorted) {
+                               std::vector<std::pair<int, Entry<T, U>>> sorted) {
     /*
      * Function flush_new_level_level: Flush to a new level
      * Param unordered_map<string, string> level_info: Information on the current level we are on
@@ -456,12 +461,17 @@ void DB<T, U>::flush_new_level(std::unordered_map<std::string, std::string> leve
     int current_run = std::stoi(level_info["CurrentRun"]);
     int max_runs = std::stoi(level_info["MaxRuns"]);
 
-    if (current_run == (max_runs-1)){
+    if (current_run == (max_runs - 1)) {
         DLOG_F(INFO, ("Level " + level_info["Level"] + " is full").c_str());
-
+        //remove all teirs since it's going to become a new level soon
+        for(int i=0; i<max_runs; i++){
+            std::string to_remove = level_info["Level"]+"."+std::to_string(i);
+            fence_pointer.erase(to_remove);
+            bloom_filter.erase(to_remove);
+        }
         // Get all data from current level -> Push down
         std::vector<std::pair<int, Entry<T, U>>> old_values;
-        if (level_info["Type"] == "Tier"){
+        if (level_info["Type"] == "Tier") {
             old_values = load_tier_data(level_info);
         } else if (level_info["Type"] == "Level") {
             old_values = load_level_data(level_info);
@@ -484,20 +494,38 @@ void DB<T, U>::flush_new_level(std::unordered_map<std::string, std::string> leve
 
         // Recursively call
         std::string next_level_string = std::to_string(std::stoi(level_info["Level"]) + 1);
-        std::unordered_map<std::string, std::string> next_level_info = LOAD_LEVEL(next_level_string, level_info["Type"]);
+        std::unordered_map<std::string, std::string> next_level_info = LOAD_LEVEL(next_level_string,
+                                                                                  level_info["Type"]);
         return flush_new_level(next_level_info, sorted);
 
     } else if (current_run < max_runs) {
-        DLOG_F(INFO, ("Found free spot at level " + level_info["Level"] + ", current_run: " + level_info["CurrentRun"]).c_str());
+        DLOG_F(INFO, ("Found free spot at level " + level_info["Level"] + ", current_run: " +
+                      level_info["CurrentRun"]).c_str());
 
         // We have a free spot at this level
         std::sort(sorted.begin(), sorted.end(), customLess);
-
+        FencePointer temp_fence;
+        BloomFilter temp_bloom;
         // Built our output
         std::string output = "";
+        std::string file_name;
+        if (level_info["Type"] == "Tier") {
+            file_name = DATA_FOLDER_PATH + "/" + level_info["Level"] + "/" + std::to_string(current_run) + "/" +
+                        std::to_string(current_run) + ".leodb";
+        } else if (level_info["Type"] == "Level") {
+            file_name = DATA_FOLDER_PATH + "/" + level_info["Level"] + "/" + level_info["Level"] + ".leodb";
+
+        }
         for (auto pair: sorted) {
+            int key = pair.second.getKey().getItem();
+            temp_bloom.program(key);
+            temp_fence.update_pointer(pair.second, file_name);
             output += (pair.second.buildString() + "\n");
         }
+        std::string insert_string = level_info["Level"] + "." + std::to_string(current_run);
+        std::cout << "FILENAME: " << file_name << "\n";
+        bloom_filter[insert_string] = temp_bloom;
+        fence_pointer[insert_string] = temp_fence;
 
         // Add our data to this level
         add_data_to_level(level_info, output);
@@ -508,7 +536,7 @@ void DB<T, U>::flush_new_level(std::unordered_map<std::string, std::string> leve
 }
 
 template<class T, class U>
-void DB<T, U>::delete_level_content(std::unordered_map<std::string, std::string> level_info){
+void DB<T, U>::delete_level_content(std::unordered_map<std::string, std::string> level_info) {
     /*
      * Function delete_level_content: Delete content for a level
      * Param unordered_map<string, string> level_info: Information on the current level we are on
@@ -541,18 +569,18 @@ void DB<T, U>::add_data_to_level(std::unordered_map<std::string, std::string> le
     // As our monitor what we should make the next level
     level_info = monitor.optimize(level_info);
 
-    if (level_info["Type"] == "Tier"){
+    if (level_info["Type"] == "Tier") {
         // Write our data
         std::string folder_name = (DATA_FOLDER_PATH + "/" + level_info["Level"] + "/" + level_info["CurrentRun"]);
         std::string file_name = folder_name + "/" + level_info["CurrentRun"] + ".leodb";
-        if (!std::filesystem::exists(folder_name.c_str())){
+        if (!std::filesystem::exists(folder_name.c_str())) {
             std::filesystem::create_directory(folder_name);
         }
         // Add the data to the current run
         std::ofstream run_file(file_name);
         run_file << output;
         run_file.close();
-    } else if (level_info["Type"] == "Level"){
+    } else if (level_info["Type"] == "Level") {
         // Write to our output
         std::string file_name = (DATA_FOLDER_PATH + "/" + level_info["Level"] + "/" + level_info["Level"] + ".leodb");
         std::ifstream possible_file(file_name);
@@ -586,16 +614,17 @@ int DB<T, U>::get_lines_in_file(std::string file_path) {
     std::string s;
     std::ifstream in;
     in.open(file_path);
-    while(!in.eof()) {
+    while (!in.eof()) {
         getline(in, s);
-        total_lines ++;
+        total_lines++;
     }
     in.close();
     return total_lines;
 }
 
 template<class T, class U>
-std::vector<std::pair<int, Entry<T, U>>> DB<T, U>::load_tier_data(std::unordered_map<std::string, std::string> level_info) {
+std::vector<std::pair<int, Entry<T, U>>>
+DB<T, U>::load_tier_data(std::unordered_map<std::string, std::string> level_info) {
     /*
      * Function load_tier_data: Load Tier data for level
      * Param unordered_map<string, string> level_info: Information about our current level
@@ -612,20 +641,19 @@ std::vector<std::pair<int, Entry<T, U>>> DB<T, U>::load_tier_data(std::unordered
     DLOG_F(INFO, ("[Tier] Loading level " + level_info["Level"] + " data...").c_str());
     std::string folder_path = DATA_FOLDER_PATH + "/" + level_info["Level"];
     std::string output_text;
-    for (int x = 0; x < std::stoi(level_info["MaxRuns"]); x++){
+    for (int x = 0; x < std::stoi(level_info["MaxRuns"]); x++) {
         std::string data_path = folder_path + "/" + std::to_string(x) + "/" + std::to_string(x) + ".leodb";
         std::ifstream possible_file(data_path);
         while (getline(possible_file, output_text)) {
             int hash_key_value = std::stoi(output_text.substr(0, output_text.find("::")));
             std::string key_value = output_text.substr(output_text.find("::") + 2, output_text.find(":::"));
-            std::string value_value = output_text.substr(output_text.find(":::") + 3,output_text.find("::::"));
-            std::string deleted = output_text.substr(output_text.find("::::") + 4,output_text.find("::::"));
-            Entry<T, U> new_entry (key_value, value_value);
+            std::string value_value = output_text.substr(output_text.find(":::") + 3, output_text.find("::::"));
+            std::string deleted = output_text.substr(output_text.find("::::") + 4, output_text.find("::::"));
+            Entry<T, U> new_entry(key_value, value_value);
             if (deleted.compare("1") != 0) {
                 ret.push_back(std::pair<int, Entry<T, U> >(
                         std::pair<int, Entry<T, U> >(hash_key_value, new_entry)));
-            }
-            else {
+            } else {
                 new_entry.tomb_it();
                 ret.push_back(std::pair<int, Entry<T, U> >(
                         std::pair<int, Entry<T, U> >(hash_key_value, new_entry)));
@@ -637,7 +665,8 @@ std::vector<std::pair<int, Entry<T, U>>> DB<T, U>::load_tier_data(std::unordered
 }
 
 template<class T, class U>
-std::vector<std::pair<int, Entry<T, U>>> DB<T, U>::load_level_data(std::unordered_map<std::string, std::string> level_info) {
+std::vector<std::pair<int, Entry<T, U>>>
+DB<T, U>::load_level_data(std::unordered_map<std::string, std::string> level_info) {
     /*
      * Function load_level_data: Load Level data for level
      * Param unordered_map<string, string> level_info: Information about our current level
@@ -661,14 +690,13 @@ std::vector<std::pair<int, Entry<T, U>>> DB<T, U>::load_level_data(std::unordere
         while (getline(possible_file, output_text)) {
             int hash_key_value = std::stoi(output_text.substr(0, output_text.find("::")));
             std::string key_value = output_text.substr(output_text.find("::") + 2, output_text.find(":::"));
-            std::string value_value = output_text.substr(output_text.find(":::") + 3,output_text.find("::::"));
-            std::string deleted = output_text.substr(output_text.find("::::") + 4,output_text.find("::::"));
-            Entry<T, U> new_entry (key_value, value_value);
+            std::string value_value = output_text.substr(output_text.find(":::") + 3, output_text.find("::::"));
+            std::string deleted = output_text.substr(output_text.find("::::") + 4, output_text.find("::::"));
+            Entry<T, U> new_entry(key_value, value_value);
             if (deleted.compare("1") != 0) {
                 ret.push_back(std::pair<int, Entry<T, U> >(
                         std::pair<int, Entry<T, U> >(hash_key_value, new_entry)));
-            }
-            else {
+            } else {
                 new_entry.tomb_it();
                 ret.push_back(std::pair<int, Entry<T, U> >(
                         std::pair<int, Entry<T, U> >(hash_key_value, new_entry)));
@@ -677,7 +705,7 @@ std::vector<std::pair<int, Entry<T, U>>> DB<T, U>::load_level_data(std::unordere
         possible_file.close();
         return ret;
     }
-    LOG_F(WARNING, ("Level " + level_info["Level"]  + " is empty").c_str());
+    LOG_F(WARNING, ("Level " + level_info["Level"] + " is empty").c_str());
     return ret;
 }
 
@@ -693,7 +721,7 @@ bool DB<T, U>::DUMP_LEVEL(std::unordered_map<std::string, std::string> level_inf
     std::ifstream possible_file(level_info_file.c_str());
     if (possible_file.is_open()) {
         std::string new_level_info;
-        for(auto pair: level_info){
+        for (auto pair: level_info) {
             // Loop and add each value to string to output
             new_level_info += pair.first + "::" + pair.second + "\n";
         }
@@ -703,7 +731,7 @@ bool DB<T, U>::DUMP_LEVEL(std::unordered_map<std::string, std::string> level_inf
         LOG_F(INFO, ("Successfully dumped level " + level_info["Level"] + "!").c_str());
         possible_file.close();
     } else {
-        LOG_F(ERROR, ("Error dumping level " + level_info["Level"]+ "!").c_str());
+        LOG_F(ERROR, ("Error dumping level " + level_info["Level"] + "!").c_str());
         return false;
     }
     return true;
@@ -727,9 +755,9 @@ std::unordered_map<std::string, std::string> DB<T, U>::LOAD_LEVEL(std::string le
     if (possible_file.is_open()) {
         DLOG_F(INFO, ("Loading level: " + level).c_str());
         std::string output_text;
-        while (getline (possible_file, output_text)) {
+        while (getline(possible_file, output_text)) {
             std::string variable_name = output_text.substr(0, output_text.find("::"));
-            std::string variable_value = output_text.substr( output_text.find("::")+2, output_text.length());
+            std::string variable_value = output_text.substr(output_text.find("::") + 2, output_text.length());
             ret[variable_name] = variable_value;
         }
         DLOG_F(INFO, ("Successfully loaded level " + level + "!").c_str());
@@ -738,12 +766,13 @@ std::unordered_map<std::string, std::string> DB<T, U>::LOAD_LEVEL(std::string le
     } else {
         DLOG_F(WARNING, ("Could not find level " + level + ". Creating...").c_str());
         // Create the folder for the level if it doesn't exists
-        if (!std::filesystem::exists(folder_name.c_str())){
+        if (!std::filesystem::exists(folder_name.c_str())) {
             DLOG_F(INFO, ("Creating folder for level " + level + "...").c_str());
             std::filesystem::create_directory(folder_name);
 
             // Update height, store the max level seen so far
-            manifest["Height"] = std::to_string(std::max(std::stoi(manifest["Height"]) + 1, std::stoi(manifest["Height"])));
+            manifest["Height"] = std::to_string(
+                    std::max(std::stoi(manifest["Height"]) + 1, std::stoi(manifest["Height"])));
         }
         std::ofstream level_file(file_name);
         int int_level = std::stoi(level);
@@ -798,7 +827,7 @@ void DB<T, U>::DUMP_IN_MEMORY() {
      * Function DUMP_IN_MEMORY: Dump our in-memory (table) values
      */
     std::string output = "";
-    for (auto pair: table){
+    for (auto pair: table) {
         output += (pair.second.buildString() + "\n");
     }
     std::ofstream new_in_memory(DATA_FOLDER_PATH + "/in-memory.leodb", std::ofstream::trunc);
@@ -816,9 +845,9 @@ void DB<T, U>::LOAD_IN_MEMORY() {
     if (possible_file.is_open()) {
         DLOG_F(INFO, "Found in-memory.leodb");
         std::string output_text;
-        while (getline (possible_file, output_text)) {
-            Key<T> key(std::stoi(output_text.substr(output_text.find("::")+2, output_text.find(":::"))));
-            Value<U> value(std::stoi(output_text.substr( output_text.find("::")+2, output_text.length())));
+        while (getline(possible_file, output_text)) {
+            Key<T> key(std::stoi(output_text.substr(output_text.find("::") + 2, output_text.find(":::"))));
+            Value<U> value(std::stoi(output_text.substr(output_text.find("::") + 2, output_text.length())));
             int inserted = key.hashItem();
             if (table.count(inserted) == 0) {
                 totalKeys += 1;
