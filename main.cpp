@@ -10,7 +10,7 @@ int main() {
 
     DB<int, int> leodb("level", "data", "data/leodb-log.log");
     for (int x = 0; x < 1000; x++){
-        leodb.put(x, x);
+        leodb.put(rand_array[x], rand_array[x]);
     }
 
     // Delete
@@ -24,31 +24,25 @@ int main() {
 //    }
 
     // Max
-//    std::cout << leodb.max();
+//    std::cout << "Max: " + std::to_string(leodb.max());
 
     // Min
-//    std::cout << leodb.min();
+    std::cout << "Min: " + std::to_string(leodb.min()) + "\n";
 
     // Scan
-//    std::vector < Value<int> > ret = leodb.scan(Key<int>(0), Key<int>(500));
-//    for (auto item: ret){
-//        std::cout << item.getString() + "-";
-//    }
+    std::vector < Value<int> > ret = leodb.scan(Key<int>(0), Key<int>(500));
+    for (auto item: ret){
+        std::cout << item.getString() + "-";
+    }
+
+    std::cout << "\n";
 
     // Avg
-//    std::cout << leodb.avg();
+    std::cout << "Avg: " + std::to_string(leodb.avg()) + "\n";
 
     // StdDev
-//    std::cout << leodb.stddev();
+    std::cout << "StdDev: " + std::to_string(leodb.stddev()) + "\n";
 
     leodb.close();
     return 0;
 }
-
-/*
- * Working:
- * - Put
- * - Get
- * - Delete
- *
- */

@@ -130,25 +130,25 @@ Value<T> DB<T, U>::get(T _key) {
             return ret.getValue();
         }
     } else {
-//        bool found = false;
-//        for (auto &x : bloom_filter) {
-//            if (x.second.query(key.getItem()))
-//                found = true;
-//        }
-//        if (found) {
-//            DLOG_F(INFO, "Found key in bloom filter");
-//            Entry<T, U> ret;
-//            for (auto &x : fence_pointer) {
-//                ret = x.second.search(key);
-//            }
-//            if (ret.getKey().hashItem() == key.hashItem()) {
-//                DLOG_F(INFO, "Found key in fence pointer!");
-//                return ret.getValue();
-//            }
-//        } else {
+        bool found = false;
+        for (auto &x : bloom_filter) {
+            if (x.second.query(key.getItem()))
+                found = true;
+        }
+        if (found) {
+            DLOG_F(INFO, "Found key in bloom filter");
+            Entry<T, U> ret;
+            for (auto &x : fence_pointer) {
+                ret = x.second.search(key);
+            }
+            if (ret.getKey().hashItem() == key.hashItem()) {
+                DLOG_F(INFO, "Found key in fence pointer!");
+                return ret.getValue();
+            }
+        } else {
             DLOG_F(INFO, "Searching memory...");
             return SEARCH_MEMORY(key);
-//        }
+        }
 
     }
     DLOG_F(WARNING, "Uh Oh! This should not happen!");
@@ -650,12 +650,12 @@ void DB<T, U>::flush_new_level(std::unordered_map<std::string, std::string> leve
 
     if (current_run == (max_runs - 1)) {
         DLOG_F(INFO, ("level " + level_info["level"] + " is full").c_str());
-        //remove all teirs since it's going to become a new level soon
-//        for(int i=0; i<max_runs; i++){
-//            std::string to_remove = level_info["level"]+"."+std::to_string(i);
-//            fence_pointer.erase(to_remove);
-//            bloom_filter.erase(to_remove);
-//        }
+        // remove all teirs since it's going to become a new level soon
+        for(int i=0; i<max_runs; i++){
+            std::string to_remove = level_info["level"]+"."+std::to_string(i);
+            fence_pointer.erase(to_remove);
+            bloom_filter.erase(to_remove);
+        }
         // Get all data from current level -> Push down
         std::vector<std::pair<int, Entry<T, U>>> old_values;
         if (level_info["Type"] == "tier") {
@@ -681,11 +681,10 @@ void DB<T, U>::flush_new_level(std::unordered_map<std::string, std::string> leve
 
     } else if (current_run < max_runs) {
         // We have a free spot at this level
-//        FencePointer<U, T> temp_fence;
-//        BloomFilter temp_bloom;
-        // Built our output
-//        std::string output = "";
+        FencePointer<T, U> temp_fence;
+        BloomFilter temp_bloom;
         std::string file_name;
+
         if (level_info["Type"] == "tier") {
             file_name = DATA_FOLDER_PATH + "/" + level_info["level"] + "/" + std::to_string(current_run) + "/" +
                         std::to_string(current_run) + ".leodb";
@@ -694,9 +693,9 @@ void DB<T, U>::flush_new_level(std::unordered_map<std::string, std::string> leve
 
         }
 
-//        std::string insert_string = level_info["level"] + "." + std::to_string(current_run);
-//        bloom_filter[insert_string] = temp_bloom;
-//        fence_pointer[insert_string] = temp_fence;
+        std::string insert_string = level_info["level"] + "." + std::to_string(current_run);
+        bloom_filter[insert_string] = temp_bloom;
+        fence_pointer[insert_string] = temp_fence;
 
         DLOG_F(INFO, ("Found free spot at level " + level_info["level"] + ", current_run: " + level_info["CurrentRun"]).c_str());
 
