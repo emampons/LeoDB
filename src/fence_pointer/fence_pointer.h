@@ -7,7 +7,7 @@
 #include <data/value.h>
 #include <fstream>
 
-//template <class T, class U>
+template <class T, class U>
 class FencePointer {
 public:
     FencePointer() {
@@ -16,8 +16,8 @@ public:
 
     ~FencePointer() = default;
 
-    void update_pointer(Entry <int, int> data, std::string file);
-    Value<int> search(Key<int> key);
+    void update_pointer(Entry <T, U> data, std::string file);
+    Entry<T, U> search(Key<T> key);
     int get_size();
 
 private:
@@ -25,7 +25,7 @@ private:
     int MAX_SIZE = 1024;
     int total_entries;
     void LOAD_INTO_MEMORY(std::string file_name);
-    std::unordered_map<int, Entry<int, int> > searches;
+    std::unordered_map<int, Entry<T, U> > searches;
 
 };
 

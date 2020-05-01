@@ -61,11 +61,11 @@
 	#include <unistd.h>   // STDERR_FILENO
 #endif
 
-#ifdef __linux__
-	#include <linux/limits.h> // PATH_MAX
-#elif !defined(_WIN32)
-	#include <limits.h> // PATH_MAX
-#endif
+//#ifdef __linux__
+//	#include <linux/limits.h> // PATH_MAX
+//#elif !defined(_WIN32)
+#include <limits.h> // PATH_MAX
+//#endif
 
 #ifndef PATH_MAX
 	#define PATH_MAX 1024
@@ -93,7 +93,7 @@
 	#define LOGURU_PTHREADS    1
 	#define LOGURU_WINTHREADS  0
 	#ifndef LOGURU_STACKTRACES
-		#define LOGURU_STACKTRACES 1
+		#define LOGURU_STACKTRACES 0
 	#endif
 #endif
 

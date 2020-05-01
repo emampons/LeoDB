@@ -29,11 +29,11 @@ if (${BUILD_TESTS} MATCHES "1")
         add_executable(${TESTNAME} ${TESTSOURCE})
         target_link_libraries(${TESTNAME} gtest gtest_main)
     endmacro()
-
-    # Add unit test files
-    package_add_test(test_operators tests/test_operators.cpp)
-    package_add_test(test_key tests/test_key.cpp)
-    package_add_test(test_value tests/test_value.cpp)
+#
+#    # Add unit test files
+#    package_add_test(test_operators tests/test_operators.cpp)
+#    package_add_test(test_key tests/test_key.cpp)
+#    package_add_test(test_value tests/test_value.cpp)
 
     # Install Google BenchmarkTests
     add_subdirectory(external/googlebenchmark)
@@ -43,7 +43,84 @@ if (${BUILD_TESTS} MATCHES "1")
     endmacro()
 
     # Add benchmark files
-    package_add_benchmark(benchmark_level_put_500 tests/benchmark/benchmark_level/benchmark_put_500.cpp)
-    package_add_benchmark(benchmark_level_put_1000 tests/benchmark/benchmark_level/benchmark_put_1000.cpp)
-    package_add_benchmark(benchmark_level_put_get_500 tests/benchmark/benchmark_level/benchmark_put_get_500.cpp)
+    # level
+    # Put tests
+    package_add_benchmark(benchmark_level_put_1000 tests/benchmark/level/benchmark_level_put_1000.cpp)
+    package_add_benchmark(benchmark_level_put_5000 tests/benchmark/level/benchmark_level_put_5000.cpp)
+    package_add_benchmark(benchmark_level_put_10000 tests/benchmark/level/benchmark_level_put_10000.cpp)
+    package_add_benchmark(benchmark_level_put_25000 tests/benchmark/level/benchmark_level_put_25000.cpp)
+    package_add_benchmark(benchmark_level_put_50000 tests/benchmark/level/benchmark_level_put_50000.cpp)
+    package_add_benchmark(benchmark_level_put_100000 tests/benchmark/level/benchmark_level_put_100000.cpp)
+    package_add_benchmark(benchmark_level_put_250000 tests/benchmark/level/benchmark_level_put_250000.cpp)
+
+    # Put and get tests
+    package_add_benchmark(benchmark_level_put_get_500 tests/benchmark/level/benchmark_level_put_get_500.cpp)
+    package_add_benchmark(benchmark_level_put_get_1000 tests/benchmark/level/benchmark_level_put_get_1000.cpp)
+    package_add_benchmark(benchmark_level_put_get_5000 tests/benchmark/level/benchmark_level_put_get_5000.cpp)
+    package_add_benchmark(benchmark_level_put_get_10000 tests/benchmark/level/benchmark_level_put_get_10000.cpp)
+    package_add_benchmark(benchmark_level_put_get_25000 tests/benchmark/level/benchmark_level_put_get_25000.cpp)
+
+    # Put, get, put tests
+    package_add_benchmark(benchmark_level_put_get_put_1000 tests/benchmark/level/benchmark_level_put_get_put_1000.cpp)
+    package_add_benchmark(benchmark_level_put_get_put_5000 tests/benchmark/level/benchmark_level_put_get_put_5000.cpp)
+    package_add_benchmark(benchmark_level_put_get_put_10000 tests/benchmark/level/benchmark_level_put_get_put_10000.cpp)
+
+    # Put, get, put new tests
+    package_add_benchmark(benchmark_level_put_get_put_new_1000 tests/benchmark/level/benchmark_level_put_get_put_new_1000.cpp)
+    package_add_benchmark(benchmark_level_put_get_put_new_5000 tests/benchmark/level/benchmark_level_put_get_put_new_5000.cpp)
+    package_add_benchmark(benchmark_level_put_get_put_new_10000 tests/benchmark/level/benchmark_level_put_get_put_new_10000.cpp)
+
+    # tier
+    # Put tests
+    package_add_benchmark(benchmark_tier_put_1000 tests/benchmark/tier/benchmark_tier_put_1000.cpp)
+    package_add_benchmark(benchmark_tier_put_5000 tests/benchmark/tier/benchmark_tier_put_5000.cpp)
+    package_add_benchmark(benchmark_tier_put_10000 tests/benchmark/tier/benchmark_tier_put_10000.cpp)
+    package_add_benchmark(benchmark_tier_put_25000 tests/benchmark/tier/benchmark_tier_put_25000.cpp)
+    package_add_benchmark(benchmark_tier_put_50000 tests/benchmark/tier/benchmark_tier_put_50000.cpp)
+    package_add_benchmark(benchmark_tier_put_100000 tests/benchmark/tier/benchmark_tier_put_100000.cpp)
+    package_add_benchmark(benchmark_tier_put_250000 tests/benchmark/tier/benchmark_tier_put_250000.cpp)
+
+    # Put and get tests
+    package_add_benchmark(benchmark_tier_put_get_500 tests/benchmark/tier/benchmark_tier_put_get_500.cpp)
+    package_add_benchmark(benchmark_tier_put_get_1000 tests/benchmark/tier/benchmark_tier_put_get_1000.cpp)
+    package_add_benchmark(benchmark_tier_put_get_5000 tests/benchmark/tier/benchmark_tier_put_get_5000.cpp)
+    package_add_benchmark(benchmark_tier_put_get_10000 tests/benchmark/tier/benchmark_tier_put_get_10000.cpp)
+    package_add_benchmark(benchmark_tier_put_get_25000 tests/benchmark/tier/benchmark_tier_put_get_25000.cpp)
+
+    # Put, get, put tests
+    package_add_benchmark(benchmark_tier_put_get_put_1000 tests/benchmark/tier/benchmark_tier_put_get_put_1000.cpp)
+    package_add_benchmark(benchmark_tier_put_get_put_5000 tests/benchmark/tier/benchmark_tier_put_get_put_5000.cpp)
+    package_add_benchmark(benchmark_tier_put_get_put_10000 tests/benchmark/tier/benchmark_tier_put_get_put_10000.cpp)
+
+    # Put, get, put new tests
+    package_add_benchmark(benchmark_tier_put_get_put_new_1000 tests/benchmark/tier/benchmark_tier_put_get_put_new_1000.cpp)
+    package_add_benchmark(benchmark_tier_put_get_put_new_5000 tests/benchmark/tier/benchmark_tier_put_get_put_new_5000.cpp)
+    package_add_benchmark(benchmark_tier_put_get_put_new_10000 tests/benchmark/tier/benchmark_tier_put_get_put_new_10000.cpp)
+
+    # any_level
+    # Put tests
+    package_add_benchmark(benchmark_any_level_put_1000 tests/benchmark/any_level/benchmark_any_level_put_1000.cpp)
+    package_add_benchmark(benchmark_any_level_put_5000 tests/benchmark/any_level/benchmark_any_level_put_5000.cpp)
+    package_add_benchmark(benchmark_any_level_put_10000 tests/benchmark/any_level/benchmark_any_level_put_10000.cpp)
+    package_add_benchmark(benchmark_any_level_put_25000 tests/benchmark/any_level/benchmark_any_level_put_25000.cpp)
+    package_add_benchmark(benchmark_any_level_put_50000 tests/benchmark/any_level/benchmark_any_level_put_50000.cpp)
+    package_add_benchmark(benchmark_any_level_put_100000 tests/benchmark/any_level/benchmark_any_level_put_100000.cpp)
+    package_add_benchmark(benchmark_any_level_put_250000 tests/benchmark/any_level/benchmark_any_level_put_250000.cpp)
+
+    # Put and get tests
+    package_add_benchmark(benchmark_any_level_put_get_500 tests/benchmark/any_level/benchmark_any_level_put_get_500.cpp)
+    package_add_benchmark(benchmark_any_level_put_get_1000 tests/benchmark/any_level/benchmark_any_level_put_get_1000.cpp)
+    package_add_benchmark(benchmark_any_level_put_get_5000 tests/benchmark/any_level/benchmark_any_level_put_get_5000.cpp)
+    package_add_benchmark(benchmark_any_level_put_get_10000 tests/benchmark/any_level/benchmark_any_level_put_get_10000.cpp)
+    package_add_benchmark(benchmark_any_level_put_get_25000 tests/benchmark/any_level/benchmark_any_level_put_get_25000.cpp)
+
+    # Put, get, put tests
+    package_add_benchmark(benchmark_any_level_put_get_put_1000 tests/benchmark/any_level/benchmark_any_level_put_get_put_1000.cpp)
+    package_add_benchmark(benchmark_any_level_put_get_put_5000 tests/benchmark/any_level/benchmark_any_level_put_get_put_5000.cpp)
+    package_add_benchmark(benchmark_any_level_put_get_put_10000 tests/benchmark/any_level/benchmark_any_level_put_get_put_10000.cpp)
+
+    # Put, get, put new tests
+    package_add_benchmark(benchmark_any_level_put_get_put_new_1000 tests/benchmark/any_level/benchmark_any_level_put_get_put_new_1000.cpp)
+    package_add_benchmark(benchmark_any_level_put_get_put_new_5000 tests/benchmark/any_level/benchmark_any_level_put_get_put_new_5000.cpp)
+    package_add_benchmark(benchmark_any_level_put_get_put_new_10000 tests/benchmark/any_level/benchmark_any_level_put_get_put_new_10000.cpp)
 endif()

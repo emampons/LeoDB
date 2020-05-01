@@ -1,6 +1,9 @@
 #!/bin/bash
 # Helper script to compile and run LeoDB
 
+# Verbose, show commands as we run them
+set -x
+
 # Args
 RUN_TESTS=$1
 CLEAN_UP=$2
@@ -27,7 +30,6 @@ echo "Compiling LeoDB...  "
 if [[ "$RUN_TESTS" == 1  ]]; then
     printf "Compiling and Running Tests...  \n"
     LEODB_DIRECTORY=$(pwd)
-    echo ${LEODB_DIRECTORY}
     ansible-playbook scripts/runTestSuit.yml -e path_to_leoDB=${LEODB_DIRECTORY}
 else
   printf "Compiling and Running Without Tests...  \n"
